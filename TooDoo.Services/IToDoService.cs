@@ -20,5 +20,12 @@ namespace TooDoo.Services
 		[OperationContract]
 		bool CreateToDoList(string name);
 
-	}
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, Method = "POST", ResponseFormat = WebMessageFormat.Json, UriTemplate = "todo/")]
+        void AddTodoItem(ToDo todo);
+
+        [OperationContract]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, Method = "DELETE", ResponseFormat = WebMessageFormat.Json, UriTemplate = "todo/{id}")]
+        void DeleteTodoItem(string id);
+    }
 }
