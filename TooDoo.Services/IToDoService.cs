@@ -9,7 +9,7 @@ using TooDoo.Entities;
 namespace TooDoo.Services
 {
 	[ServiceContract]
-	interface IToDoService
+	public interface IToDoService
 	{
 		[OperationContract]
 		List<ToDo> GetToDoList(string name);

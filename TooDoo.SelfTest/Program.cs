@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TooDoo.SelfTest.ToDoService;
+using TooDoo.Entities;
+using TooDoo.Services;
 
 namespace TooDoo.SelfTest
 {
@@ -11,7 +12,7 @@ namespace TooDoo.SelfTest
 	{
 		static void Main(string[] args)
 		{
-			IToDoService tddoWCF = new ToDoServiceClient();
+			IToDoService tddoWCF = new Services.ToDoService();
 			List<ToDo> list = tddoWCF.GetToDoList("Hamid");
 
 			Console.WriteLine(list[0].Description);
