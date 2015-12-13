@@ -3,7 +3,7 @@ using TooDoo.Entities;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 
-namespace DAL
+namespace TooDoo.Data
 {
     public class DAL
     {

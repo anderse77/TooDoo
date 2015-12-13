@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using TooDoo.Entities;
+using TooDoo.Data;
 
 namespace TooDoo.Services
 {
@@ -13,6 +14,7 @@ namespace TooDoo.Services
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
 	public class ToDoService : IToDoService
 	{
+        DAL context = new DAL("Data Source=ANDERS-BÄRBAR;Initial Catalog=DB_ToDoList;Integrated Security=True;");
 		public bool CreateToDoList(string name)
 		{
 			return true;
@@ -20,15 +22,14 @@ namespace TooDoo.Services
 
 		public List<ToDo> GetToDoList(string name)
 		{
-			List<ToDo> list = new List<ToDo>();
-			ToDo todo = new ToDo();
-			todo.Id = 0;
-			todo.Description = "Min todo beskrivning";
-			todo.Name = "Hamid";
-
-			list.Add(todo);
-
-			return list;
+		    try
+		    {
+		        return context.GetToDoListByName(name);
+		    }
+		    catch (Exception exception)
+		    {
+		        throw new FaultException(exception.Message + exception.StackTrace);
+		    }
 		}
 	}
 }
