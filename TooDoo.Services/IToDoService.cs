@@ -15,7 +15,7 @@ namespace TooDoo.Services
 	{
 		[OperationContract]
         [WebGet(UriTemplate = "gettodolist/{name}", ResponseFormat = WebMessageFormat.Json)]
-		List<ToDo> GetToDoList(string name);
+		List<ToDo> GetToDoListByName(string name);
 
 		[OperationContract]
 		bool CreateToDoList(string name);

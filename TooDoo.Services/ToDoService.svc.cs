@@ -14,22 +14,23 @@ namespace TooDoo.Services
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
 	public class ToDoService : IToDoService
 	{
+        //ändra denna till er egen efter att i laddat ned från servern.
         DAL context = new DAL("Data Source=ANDERS-BÄRBAR;Initial Catalog=DB_ToDoList;Integrated Security=True;");
 		public bool CreateToDoList(string name)
 		{
 			return true;
 		}
 
-		public List<ToDo> GetToDoList(string name)
-		{
-		    try
-		    {
-		        return context.GetToDoListByName(name);
-		    }
-		    catch (Exception exception)
-		    {
-		        throw new FaultException(exception.Message + exception.StackTrace);
-		    }
-		}
-	}
+        public List<ToDo> GetToDoListByName(string name)
+        {
+            try
+            {
+                return context.GetToDoListByName(name);
+            }
+            catch (Exception exception)
+            {
+                throw new FaultException(exception.Message + exception.StackTrace);
+            }
+        }
+    }
 }
