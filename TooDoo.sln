@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TooDoo.Data", "TooDoo.Data\TooDoo.Data.csproj", "{66B66183-BE89-4E1D-9DB8-E18440ED0AE7}"
 EndProject
@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TooDoo.SelfTest", "TooDoo.S
 	ProjectSection(ProjectDependencies) = postProject
 		{0E02E746-B485-466C-9F39-9824EDB869A5} = {0E02E746-B485-466C-9F39-9824EDB869A5}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,10 @@ Global
 		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
