@@ -14,7 +14,7 @@ namespace TooDoo.Services
 	public interface IToDoService
 	{
 		[OperationContract]
-        [WebGet(UriTemplate = "gettodolist/{name}", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
 
 		[OperationContract]
