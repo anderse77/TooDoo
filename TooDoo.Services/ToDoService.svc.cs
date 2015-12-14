@@ -60,7 +60,7 @@ namespace TooDoo.Services
         {
             try
             {
-                context.DeleteToDoList(Convert.ToInt32(id));
+                context.DeleteToDo(Convert.ToInt32(id));
             }
             catch (Exception exception)
             {

@@ -1,7 +1,14 @@
 ﻿using System;
-using TooDoo.Entities;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using TooDoo.Entities;
+
+/*
+Refactoring: 
+1- UpdateToDoList changed name to UpdateToDo
+2- GetToDoListbyId changed name GetToDoById returns ToDo and not list of ToDo
+
+*/
 
 namespace TooDoo.Data
 {
@@ -18,7 +25,7 @@ namespace TooDoo.Data
             connString = _connString;            
         }
         /// <summary>
-        /// Add an ToDo
+        /// AddToDo
         /// </summary>
         /// <param name="toDo"></param>
         public void AddToDo(ToDo toDo)
@@ -58,10 +65,10 @@ namespace TooDoo.Data
             }
         }
         /// <summary>
-        /// Update ToDo
+        /// UpdateToDo
         /// </summary>
         /// <param name="toDo"></param>
-        public void UpdateToDoList(ToDo toDo)
+        public void UpdateToDo(ToDo toDo)
         {
             try
             {
@@ -95,10 +102,10 @@ namespace TooDoo.Data
             }
         }
         /// <summary>
-        /// Delete ToDo
+        /// DeleteToDo
         /// </summary>
         /// <param name="ID"></param>
-        public void DeleteToDoList(int ID)
+        public void DeleteToDo(int ID)
         {
             try
             {
@@ -126,7 +133,7 @@ namespace TooDoo.Data
         }
 
         /// <summary>
-        /// Get ToDo list
+        /// GetToDoList
         /// </summary>
         /// <returns></returns>
         public List<ToDo> GetToDoList()
@@ -171,16 +178,16 @@ namespace TooDoo.Data
         }
 
         /// <summary>
-        /// Get ToDo list
+        ///  GetToDoById
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public List<ToDo> GetToDoListById(int id)
+        public ToDo GetToDoById(int id)
         {
             try
             {
                 using (conn)
                 {
-                    toDoList = new List<ToDo>();
 
                     conn = new SqlConnection(connString);
 
@@ -189,21 +196,19 @@ namespace TooDoo.Data
                     command.Connection.Open();
 
                     SqlDataReader reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
 
-                        ToDo toDo = new ToDo();
-                        toDo.Id = reader.GetInt32(reader.GetOrdinal("ID"));
-                        toDo.Description = reader.GetString(reader.GetOrdinal("Description"));
-                        toDo.Name = reader.GetString(reader.GetOrdinal("Name"));
-                        toDo.DeadLine = reader.GetDateTime(reader.GetOrdinal("DeadLine"));
-                        toDo.CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"));
-                        toDo.EstimationTime = reader.GetInt32(reader.GetOrdinal("EstimationTime"));
-                        toDo.Finnished = reader.GetBoolean(reader.GetOrdinal("Finnished"));
-                        toDoList.Add(toDo);
-                    }
+                    ToDo toDo = new ToDo();
+                    toDo.Id = reader.GetInt32(reader.GetOrdinal("ID"));
+                    toDo.Description = reader.GetString(reader.GetOrdinal("Description"));
+                    toDo.Name = reader.GetString(reader.GetOrdinal("Name"));
+                    toDo.DeadLine = reader.GetDateTime(reader.GetOrdinal("DeadLine"));
+                    toDo.CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"));
+                    toDo.EstimationTime = reader.GetInt32(reader.GetOrdinal("EstimationTime"));
+                    toDo.Finnished = reader.GetBoolean(reader.GetOrdinal("Finnished"));
+                    toDoList.Add(toDo);
+                    
                     command.Connection.Close();
-                    return toDoList;
+                    return toDo;
                 }
 
             }
@@ -215,6 +220,11 @@ namespace TooDoo.Data
 
 
         }
+        /// <summary>
+        ///  GetToDoListByName
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
 
         public List<ToDo> GetToDoListByName(string name)
         {
