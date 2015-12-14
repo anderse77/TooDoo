@@ -178,11 +178,10 @@ namespace TooDoo.Data
         }
 
         /// <summary>
-        ///  GetToDoById
+        /// Get ToDo list
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
-        public ToDo GetToDoById(int id)
+        public ToDo GetToDoListById(int id)
         {
             try
             {
@@ -195,18 +194,18 @@ namespace TooDoo.Data
                     command = new SqlCommand(sqlSelectString, conn);
                     command.Connection.Open();
 
-                    SqlDataReader reader = command.ExecuteReader();
-
                     ToDo toDo = new ToDo();
-                    toDo.Id = reader.GetInt32(reader.GetOrdinal("ID"));
-                    toDo.Description = reader.GetString(reader.GetOrdinal("Description"));
-                    toDo.Name = reader.GetString(reader.GetOrdinal("Name"));
-                    toDo.DeadLine = reader.GetDateTime(reader.GetOrdinal("DeadLine"));
-                    toDo.CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"));
-                    toDo.EstimationTime = reader.GetInt32(reader.GetOrdinal("EstimationTime"));
-                    toDo.Finnished = reader.GetBoolean(reader.GetOrdinal("Finnished"));
-                    toDoList.Add(toDo);
-                    
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        toDo.Id = reader.GetInt32(reader.GetOrdinal("ID"));
+                        toDo.Description = reader.GetString(reader.GetOrdinal("Description"));
+                        toDo.Name = reader.GetString(reader.GetOrdinal("Name"));
+                        toDo.DeadLine = reader.GetDateTime(reader.GetOrdinal("DeadLine"));
+                        toDo.CreatedDate = reader.GetDateTime(reader.GetOrdinal("CreatedDate"));
+                        toDo.EstimationTime = reader.GetInt32(reader.GetOrdinal("EstimationTime"));
+                        toDo.Finnished = reader.GetBoolean(reader.GetOrdinal("Finnished"));
+                    }
                     command.Connection.Close();
                     return toDo;
                 }
@@ -217,9 +216,8 @@ namespace TooDoo.Data
                 ErrorMessage = ex.Message;
             }
             return null;
-
-
         }
+
         /// <summary>
         ///  GetToDoListByName
         /// </summary>

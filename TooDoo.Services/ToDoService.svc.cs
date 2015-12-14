@@ -16,7 +16,7 @@ namespace TooDoo.Services
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        DAL context = new DAL("Data Source=Anders-Bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True");
+        DAL context = new DAL("");
         //DAL context = new DAL("");
 
         /// <summary>
@@ -68,16 +68,16 @@ namespace TooDoo.Services
             }
         }
 
-        public void MarkToDoItemAsFinished(string id)
+        public void MarkToDoItemAsFinished(ToDo todo)
         {
             try
             {
-                ToDo toDo = context.GetToDoById(int.Parse(id));
+                ToDo toDo = context.GetToDoListById(todo.Id);
                 toDo.Finnished = true;
                 context.UpdateToDo(toDo);
             }
             catch (Exception exception)
-            {                
+            {
                 throw new FaultException(exception.Message + exception.StackTrace);
             }
         }
