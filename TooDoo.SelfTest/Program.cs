@@ -12,6 +12,7 @@ namespace TooDoo.SelfTest
 {
 	class Program
 	{
+	    static string baseUrl = "http://localhost:2121/toodoo";
 		static void Main(string[] args)
 		{
             var wcfRh = new WcfRequestHandler();
@@ -38,6 +39,8 @@ namespace TooDoo.SelfTest
                 ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
                 host.Open();
                 Console.WriteLine("Hit any key to exit");
+                Console.WriteLine($"Skapa en att göra lista   {baseUrl}/todo/");
+                Console.WriteLine($"Att hämta en att göra lista   {baseUrl}/todo/name where name is the name of the todo-list");
                 Console.ReadKey();
                 host.Close();
             }
