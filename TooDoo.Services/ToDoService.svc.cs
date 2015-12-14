@@ -72,7 +72,7 @@ namespace TooDoo.Services
         {
             try
             {
-                ToDo toDo = context.GetToDoById(int.Parse(id));
+                ToDo toDo = context.GetToDoById(Convert.ToInt32(id));
                 toDo.Finnished = true;
                 context.UpdateToDo(toDo);
             }
