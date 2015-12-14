@@ -66,9 +66,8 @@ namespace TooDoo.SelfTest
 
         public ToDo MarkToDoItemAsFinnished(string id)
         {
-            string todo = SendRequest("/todo/finnished/" + id, "PUT", null);
+            string todo = SendRequest("/todo/finnished/", "PUT", new {Id = id});
             return new JavaScriptSerializer().Deserialize<ToDo>(todo);
-
         }
 
         /// <summary>
