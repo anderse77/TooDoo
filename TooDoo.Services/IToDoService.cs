@@ -29,7 +29,7 @@ namespace TooDoo.Services
         void DeleteToDoItem(string id);
 
 	    [OperationContract]
-	    [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, Method = "PUT", UriTemplate = "todo/finished/")]
-	    void MarkToDoItemAsFinished(string id);
+	    [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, Method = "PUT", ResponseFormat = WebMessageFormat.Json, UriTemplate = "todo/finished/")]
+	    void MarkToDoItemAsFinished(ToDo todo);
 	}
 }
