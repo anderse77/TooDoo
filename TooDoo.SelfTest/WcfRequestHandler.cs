@@ -11,6 +11,9 @@ using TooDoo.Entities;
 
 namespace TooDoo.SelfTest
 {
+    /// <summary>
+    /// Use this class to test requests to service
+    /// </summary>
     public class WcfRequestHandler
     {
         /// <summary>

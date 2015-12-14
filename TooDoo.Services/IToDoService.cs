@@ -25,7 +25,7 @@ namespace TooDoo.Services
         void AddTodoItem(ToDo todo);
 
         [OperationContract]
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.WrappedResponse, Method = "DELETE", ResponseFormat = WebMessageFormat.Json, UriTemplate = "todo/{id}")]
+        [WebInvoke(Method = "DELETE", UriTemplate = "todo/{id}")]
         void DeleteTodoItem(string id);
     }
 }
