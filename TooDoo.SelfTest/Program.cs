@@ -13,6 +13,7 @@ namespace TooDoo.SelfTest
 	class Program
 	{
 	    static string baseUrl = "http://localhost:2121/toodoo";
+        static WcfRequestHandler handler = new WcfRequestHandler();
 		static void Main(string[] args)
 		{
             var wcfRh = new WcfRequestHandler();
@@ -36,13 +37,18 @@ namespace TooDoo.SelfTest
 
             try
             {
-                ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
-                host.Open();
-                Console.WriteLine("Hit any key to exit");
-                Console.WriteLine($"Skapa en att göra lista   {baseUrl}/todo/");
-                Console.WriteLine($"Att hämta en att göra lista   {baseUrl}/todo/name where name is the name of the todo-list");
-                Console.ReadKey();
-                host.Close();
+                //ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
+                //host.Open();
+                //Console.WriteLine("Hit any key to exit");
+                //Console.WriteLine($"Skapa en att-göra-lista   {baseUrl}/todo/");
+                //Console.WriteLine($"Att hämta en att-göra-lista   {baseUrl}/todo/name där name är det unika namnet på att-göra-listan");
+                //Console.WriteLine($"Att ta bort en att-göra lista {baseUrl}/todo/id där id är det unika id:et på en att-göra-lista");
+                //Console.ReadKey();
+                //host.Close();
+                //ToDo toDo = handler.DeleteTodoItem("4");
+                //Console.WriteLine(toDo.Name);
+                ToDo toDo = handler.MarkToDoItemAsFinnished("1");
+                Console.WriteLine(toDo.Name);
             }
             catch (Exception ex)
             {

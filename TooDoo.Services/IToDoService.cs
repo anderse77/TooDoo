@@ -26,6 +26,10 @@ namespace TooDoo.Services
 
         [OperationContract]
         [WebInvoke(Method = "DELETE", UriTemplate = "todo/{id}")]
-        void DeleteTodoItem(string id);
-    }
+        void DeleteToDoItem(string id);
+
+	    [OperationContract]
+	    [WebInvoke(Method = "PUT", UriTemplate = "todo/finnished/{id}")]
+	    void MarkToDoItemAsFinished(string id);
+	}
 }

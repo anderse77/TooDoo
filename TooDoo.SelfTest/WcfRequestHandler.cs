@@ -23,7 +23,7 @@ namespace TooDoo.SelfTest
         /// <returns></returns>
         public List<ToDo> GetTodoListByName(string name)
         {
-            string todoList = this.sendRequest("/todo/" + name, "GET", null);
+            string todoList = this.SendRequest("/todo/" + name, "GET", null);
             List<ToDo> result = new JavaScriptSerializer().Deserialize<List<ToDo>>(todoList);
 
             return result;
@@ -39,7 +39,7 @@ namespace TooDoo.SelfTest
         /// <returns></returns>
         public ToDo AddTodoItem(string name, string description, DateTime deadLine, int estimationTime)
         {
-            string todo = this.sendRequest("/todo/", "POST",
+            string todo = this.SendRequest("/todo/", "POST",
                 new ToDo
                 {
                     CreatedDate = DateTime.Now,
@@ -57,11 +57,18 @@ namespace TooDoo.SelfTest
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ToDo DeleteTodoItem(string id)
+        public ToDo DeleteToDoItem(string id)
         {
-            string todo = this.sendRequest("/todo/" + id, "DELETE", null);
+            string todo = this.SendRequest("/todo/" + id, "DELETE", null);
 
             return new JavaScriptSerializer().Deserialize<ToDo>(todo);
+        }
+
+        public ToDo MarkToDoItemAsFinnished(string id)
+        {
+            string todo = SendRequest("/todo/finnished/" + id, "PUT", null);
+            return new JavaScriptSerializer().Deserialize<ToDo>(todo);
+
         }
 
         /// <summary>
@@ -71,7 +78,7 @@ namespace TooDoo.SelfTest
         /// <param name="method"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        private string sendRequest(string url, string method, object request)
+        private string SendRequest(string url, string method, object request)
         {
             ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
             host.Open();
