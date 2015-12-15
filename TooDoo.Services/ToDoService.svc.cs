@@ -8,7 +8,7 @@ using TooDoo.Entities;
 using TooDoo.Data;
 using System.Configuration;
 
-namespace TooDoo.Services
+namespace TooDoo.Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
     public class ToDoService : IToDoService
@@ -80,7 +80,7 @@ namespace TooDoo.Services
             }
         }
 
-        public bool CreateToDoList(string name)
+        public bool CreateToDo(string name)
         {
             throw new NotImplementedException();
         }

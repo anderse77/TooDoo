@@ -6,7 +6,6 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TooDoo.Entities;
-using TooDoo.Services;
 
 namespace TooDoo.SelfTest
 {
@@ -39,7 +38,7 @@ namespace TooDoo.SelfTest
 
             try
             {
-                ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
+                ServiceHost host = new ServiceHost(typeof(Service.ToDoService));
                 host.Open();
                 Console.WriteLine("Hit any key to exit");
                 Console.WriteLine($"Skapa en att-göra-lista   {baseUrl}/todo/");

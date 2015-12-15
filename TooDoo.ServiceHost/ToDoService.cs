@@ -30,10 +30,10 @@ namespace TooDoo.Service
 
             List<ToDo> todoListResult = context.GetToDoListByName(name);
 
-            //if (todoListResult == null)
-            //{
+            if (todoListResult == null)
+            {
                 throw new WebFaultException<string>(context.GetErrorMessage() ,HttpStatusCode.SeeOther);
-            //}
+            }
 
             return todoListResult;
         }

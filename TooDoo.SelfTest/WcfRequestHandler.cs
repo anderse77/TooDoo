@@ -79,7 +79,7 @@ namespace TooDoo.SelfTest
         /// <returns></returns>
         private string SendRequest(string url, string method, object request)
         {
-            ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
+            ServiceHost host = new ServiceHost(typeof(Service.ToDoService));
             host.Open();
 
             var baseUrl = host.BaseAddresses[0].AbsoluteUri;

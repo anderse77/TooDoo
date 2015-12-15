@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Services;
 using TooDoo.Entities;
 
-namespace TooDoo.Services
+namespace TooDoo.Service
 {
 	[ServiceContract]
 	public interface IToDoService

@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="TooDoo.Services.ToDoService" CodeBehind="ToDoService.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="TooDoo.Service.ToDoService" CodeBehind="ToDoService.svc.cs" %>
