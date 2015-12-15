@@ -79,7 +79,7 @@ namespace ConsoleClient
             completeList.ForEach(x => 
             {
 
-                Console.WriteLine($"{x.Id,-4}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
+                Console.WriteLine($"{x.Id,-8}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
                                   $"{x.DeadLine.ToShortDateString(),-12}{x.EstimationTime,-5}{x.Finnished}");
 
 
