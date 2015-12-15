@@ -13,15 +13,12 @@ namespace TooDoo.Service
 	public interface IToDoService
 	{
         [OperationContract]
-        [WebGet(UriTemplate = "GetAll", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "/GetAllTodo", ResponseFormat = WebMessageFormat.Json)]
         List<ToDo> GetCompleteList();
 
         [OperationContract]
         [WebGet(UriTemplate = "/{name}", ResponseFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
-
-		[OperationContract]
-		bool CreateToDo(string name);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
@@ -34,5 +31,9 @@ namespace TooDoo.Service
 	    [OperationContract]
 	    [WebInvoke( Method = "PUT", UriTemplate = "/finished/{id}", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
 	    void MarkToDoItemAsFinished(string id);
-	}
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/NbrRemainingAndFinished/{name}", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
+         Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name);
+    }
 }

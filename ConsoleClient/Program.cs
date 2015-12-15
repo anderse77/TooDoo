@@ -15,7 +15,7 @@ namespace ConsoleClient
         static IToDoService service;
         static void Main(string[] args)
         {
-            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://192.168.1.175:2121/todo"))
+            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121/todo"))
             {
                 channelFactory.Endpoint.EndpointBehaviors.Add(new WebHttpBehavior());
                 service = channelFactory.CreateChannel();
@@ -43,6 +43,7 @@ namespace ConsoleClient
             Console.WriteLine("(1) Hämta att-göra-lista");
             Console.WriteLine("(2) Skapa en att-göra-task");
             Console.WriteLine("(3) Sätt en att göra task till färdig");
+            Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -50,20 +51,24 @@ namespace ConsoleClient
         {
             switch (input)
             {
-                case 1:
-                    PrintToDoListByUserGivenName();
-                    break;
-                case 2:
-                    CreateToDoListByUserInput();
-                    break;
-                case 3:
-                    SetToDoToFinished();
-                    break;
+                case 1: PrintToDoListByUserGivenName(); break;
+                case 2: CreateToDoListByUserInput(); break;
+                case 3: SetToDoToFinished(); break;
+                case 4: GetLeftAndFinishedToDo(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+
+        private static void GetLeftAndFinishedToDo()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter kvar och antalet avklarade: ");
+            string name = Console.ReadLine();
+            var tuple = service.GetNumberTodoLeftAndFinishedinListByName(name);
+            Console.WriteLine($"Antal punkter kvar: {tuple.Item1}");
+            Console.WriteLine($"Antal punkter avklarade: {tuple.Item2}");
         }
 
         private static void printCompleteList()

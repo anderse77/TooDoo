@@ -17,9 +17,7 @@ namespace TooDoo.Service
     {
         //ändra denna till er egen efter att i laddat ned från servern.
         private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
-        private DAL context;
-
-       
+        private DAL context;       
 
         /// <summary>
         /// Returns a todo list by name
@@ -28,6 +26,11 @@ namespace TooDoo.Service
         /// <returns></returns>
         public List<ToDo> GetToDoListByName(string name)
         {
+            if(name == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
             context = new DAL(_connectionString);
 
             List<ToDo> todoListResult = context.GetToDoListByName(name);
@@ -46,6 +49,11 @@ namespace TooDoo.Service
         /// <param name="todo"></param>
         public void AddTodoItem(ToDo todo)
         {
+            if (todo == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
             context = new DAL(_connectionString);
 
             context.AddToDo(todo);
@@ -62,6 +70,11 @@ namespace TooDoo.Service
         /// <param name="id"></param>
         public void DeleteToDoItem(string id)
         {
+            if (id == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
             context = new DAL(_connectionString);
 
             try
@@ -81,6 +94,11 @@ namespace TooDoo.Service
 
         public void MarkToDoItemAsFinished(string id)
         {
+            if (id == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
             context = new DAL(_connectionString);
 
             try {
@@ -99,13 +117,8 @@ namespace TooDoo.Service
             }
         }
 
-        public bool CreateToDo(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
-        /// 
+        /// Gets the complete list of todos
         /// </summary>
         /// <returns></returns>
         public List<ToDo> GetCompleteList()
@@ -121,5 +134,35 @@ namespace TooDoo.Service
 
             return todoListResult;
         }
+
+
+        /// <summary>
+        /// Gets the number of not finished and finished todos for a specific list.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name)
+        {
+            if (name == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
+            context = new DAL(_connectionString);
+
+            List<ToDo> todos = context.GetToDoListByName(name);
+
+            if (todos == null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+
+            int todosLeft = todos.Where(x => x.Finnished == false).Count();
+            int todosFinished = todos.Where(x => x.Finnished == true).Count();
+
+            return new Tuple<int, int>(todosLeft, todosFinished);
+        }
+
+
     }
 }
