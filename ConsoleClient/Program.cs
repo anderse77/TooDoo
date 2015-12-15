@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
 using TooDoo.Entities;
@@ -10,15 +12,23 @@ namespace ConsoleClient
 {
     class Program
     {
-        public static ToDoService service = new ToDoService();
+        static IToDoService service;
         static void Main(string[] args)
         {
-            do
+            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121/todo"))
             {
-                PrintMenu();
-                int input = AskUserForNumericInput();
-                ProcessSelection(input);
-            } while (true);
+                channelFactory.Endpoint.EndpointBehaviors.Add(new WebHttpBehavior());
+                service = channelFactory.CreateChannel();
+
+                Console.WindowWidth = 110;
+
+                do
+                {
+                    PrintMenu();
+                    int input = AskUserForNumericInput();
+                    ProcessSelection(input);
+                } while (true);
+            }
         }
 
         public static void PrintMenu()
