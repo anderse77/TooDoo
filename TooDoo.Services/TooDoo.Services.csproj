@@ -107,7 +107,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>6685</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:6685/</IISUrl>
+          <IISUrl>http://localhost:2121/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
