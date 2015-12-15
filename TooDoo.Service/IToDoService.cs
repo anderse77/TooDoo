@@ -12,7 +12,11 @@ namespace TooDoo.Service
 	[ServiceContract]
 	public interface IToDoService
 	{
-		[OperationContract]
+        [OperationContract]
+        [WebGet(UriTemplate = "GetAll", ResponseFormat = WebMessageFormat.Json)]
+        List<ToDo> GetCompleteList();
+
+        [OperationContract]
         [WebGet(UriTemplate = "/{name}", ResponseFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
 
@@ -28,7 +32,7 @@ namespace TooDoo.Service
         void DeleteToDoItem(string id);
 
 	    [OperationContract]
-	    [WebInvoke( Method = "PUT", UriTemplate = "/finished/", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
-	    void MarkToDoItemAsFinished(ToDo todo);
+	    [WebInvoke( Method = "PUT", UriTemplate = "/finished/{id}", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
+	    void MarkToDoItemAsFinished(string id);
 	}
 }

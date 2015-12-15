@@ -15,28 +15,34 @@ namespace ConsoleClient
         static IToDoService service;
         static void Main(string[] args)
         {
-            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121/todo"))
+            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://192.168.1.175:2121/todo"))
             {
                 channelFactory.Endpoint.EndpointBehaviors.Add(new WebHttpBehavior());
                 service = channelFactory.CreateChannel();
 
                 Console.WindowWidth = 110;
+                Console.WindowHeight = 60;
 
                 do
                 {
                     PrintMenu();
                     int input = AskUserForNumericInput();
                     ProcessSelection(input);
+                    AskForAnyKeyToContinue();
                 } while (true);
             }
         }
 
         public static void PrintMenu()
         {
+            Console.Clear();
+            printCompleteList();
+            Console.WriteLine();
             Console.WriteLine("TooDoo Services");
             Console.WriteLine("===============");
             Console.WriteLine("(1) Hämta att-göra-lista");
-            Console.WriteLine("(2) Skapa en att-göra-lista");
+            Console.WriteLine("(2) Skapa en att-göra-task");
+            Console.WriteLine("(3) Sätt en att göra task till färdig");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -50,11 +56,35 @@ namespace ConsoleClient
                 case 2:
                     CreateToDoListByUserInput();
                     break;
+                case 3:
+                    SetToDoToFinished();
+                    break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+
+        private static void printCompleteList()
+        {
+            List<ToDo> completeList = service.GetCompleteList();
+            completeList.ForEach(x => 
+            {
+
+                Console.WriteLine($"{x.Id,-4}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
+                                  $"{x.DeadLine.ToShortDateString(),-12}{x.EstimationTime,-5}{x.Finnished}");
+
+
+            });
+        }
+
+        private static void SetToDoToFinished()
+        {
+            Console.Write("Ange det todo id du vill markera som klar: ");
+            int todoIdToSetAsFinished = AskUserForNumericInput();
+
+            service.MarkToDoItemAsFinished(todoIdToSetAsFinished.ToString());
         }
 
         private static void CreateToDoListByUserInput()
@@ -92,7 +122,8 @@ namespace ConsoleClient
             toDo.ForEach(s =>
             {
                 string finished = s.Finnished ? "Finished" : "Not finished";
-                Console.WriteLine($"Description: {s.Description} " +
+                Console.WriteLine($"Id: {s.Id} " +
+                                  $"Description: {s.Description} " +
                                   $"Estimation time: {s.EstimationTime} " +
                                   $"Created: {s.CreatedDate} " +
                                   $"Deadline: {s.DeadLine} " +
@@ -149,6 +180,13 @@ namespace ConsoleClient
                 }
             } while (!inputWasDateTime);
             return inputAsDateTime;
+        }
+
+        public static void AskForAnyKeyToContinue()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press Any key to continue!");
+            Console.ReadKey();
         }
     }
 }

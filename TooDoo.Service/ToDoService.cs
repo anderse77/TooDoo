@@ -19,6 +19,8 @@ namespace TooDoo.Service
         private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
         private DAL context;
 
+       
+
         /// <summary>
         /// Returns a todo list by name
         /// </summary>
@@ -62,23 +64,36 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            context.DeleteToDo(Convert.ToInt32(id));
+            try
+            {
+                context.DeleteToDo(Convert.ToInt32(id));
+            }
+            catch(Exception ex)
+            {
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
+            }
 
-            if (context.GetErrorMessage() != "")
+            if (context.GetErrorMessage() != null)
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
 
-        public void MarkToDoItemAsFinished(ToDo todo)
+        public void MarkToDoItemAsFinished(string id)
         {
             context = new DAL(_connectionString);
 
-            ToDo toDo = context.GetToDoListById(todo.Id);
-            toDo.Finnished = true;
-            context.UpdateToDo(toDo);
+            try {
+                ToDo toDo = context.GetToDoById(Convert.ToInt32(id));
+                toDo.Finnished = true;
+                context.UpdateToDo(toDo);
+            }
+            catch(Exception ex)
+            {
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
+            }
 
-            if (context.GetErrorMessage() != "")
+            if (context.GetErrorMessage() != null)
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
@@ -87,6 +102,24 @@ namespace TooDoo.Service
         public bool CreateToDo(string name)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<ToDo> GetCompleteList()
+        {
+            context = new DAL(_connectionString);
+
+            List<ToDo> todoListResult = context.GetToDoList();
+
+            if (todoListResult == null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+
+            return todoListResult;
         }
     }
 }
