@@ -58,7 +58,7 @@ namespace TooDoo.Service
 
             context.AddToDo(todo);
 
-            if(context.GetErrorMessage() != "")
+            if(context.GetErrorMessage() != null)
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }

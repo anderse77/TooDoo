@@ -17,11 +17,16 @@ namespace TooDoo.Service
         List<ToDo> GetCompleteList();
 
         [OperationContract]
-        [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", UriTemplate = "todo/", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
+        [WebInvoke(
+            Method = "POST", 
+            UriTemplate = "todo/", 
+            ResponseFormat = WebMessageFormat.Json, 
+            RequestFormat = WebMessageFormat.Json, 
+            BodyStyle = WebMessageBodyStyle.WrappedResponse)]
         void AddTodoItem(ToDo todo);
 
         [OperationContract]
@@ -29,15 +34,27 @@ namespace TooDoo.Service
         void DeleteToDoItem(string id);
 
 	    [OperationContract]
-	    [WebInvoke( Method = "PUT", UriTemplate = "todo/finished/", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedResponse)]
+	    [WebInvoke( 
+            Method = "PUT", 
+            UriTemplate = "todo/finished/", 
+            ResponseFormat = WebMessageFormat.Json, 
+            RequestFormat = WebMessageFormat.Json, 
+            BodyStyle = WebMessageBodyStyle.WrappedResponse)]
 	    void MarkToDoItemAsFinished(string id);
 
         [OperationContract]
-        [WebGet(UriTemplate = "todo/NbrRemainingAndFinished/{name}", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(
+            UriTemplate = "todo/NbrRemainingAndFinished/{name}", 
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
          Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name);
 
         [OperationContract]
-        [WebInvoke(Method = "PUT", UriTemplate = "todo/update")]
+        [WebInvoke(
+            Method = "PUT", 
+            UriTemplate = "todo/update",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
         void EditToDo(ToDo todo);
     }
 }
