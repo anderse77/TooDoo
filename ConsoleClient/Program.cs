@@ -44,6 +44,7 @@ namespace ConsoleClient
             Console.WriteLine("(2) Skapa en att-göra-task");
             Console.WriteLine("(3) Sätt en att göra task till färdig");
             Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
+            Console.WriteLine("(5) Ta bort en att-göra task");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -55,6 +56,7 @@ namespace ConsoleClient
                 case 2: CreateToDoListByUserInput(); break;
                 case 3: SetToDoToFinished(); break;
                 case 4: GetLeftAndFinishedToDo(); break;
+                case 5: deleteTodoItemById(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
@@ -134,6 +136,17 @@ namespace ConsoleClient
                                   $"Deadline: {s.DeadLine} " +
                                   $"{finished}");
             });
+        }
+
+        /// <summary>
+        /// Deletes a todo item by id
+        /// </summary>
+        private static void deleteTodoItemById()
+        {
+            Console.WriteLine("Ange det todo id du vill ta bort: ");
+            int id = AskUserForNumericInput();
+
+            service.DeleteToDoItem(id.ToString());
         }
 
         public static int AskUserForNumericInput()

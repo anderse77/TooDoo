@@ -70,12 +70,17 @@ namespace TooDoo.Service
         /// <param name="id"></param>
         public void DeleteToDoItem(string id)
         {
+            context = new DAL(_connectionString);
+
             if (id == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
 
-            context = new DAL(_connectionString);
+            if (context.GetToDoById(Convert.ToInt32(id)) == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
 
             try
             {
