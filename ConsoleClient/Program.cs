@@ -15,7 +15,7 @@ namespace ConsoleClient
         static IToDoService service;
         static void Main(string[] args)
         {
-            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121/todo"))
+            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121"))
             {
                 channelFactory.Endpoint.EndpointBehaviors.Add(new WebHttpBehavior());
                 service = channelFactory.CreateChannel();

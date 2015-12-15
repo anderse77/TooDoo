@@ -25,7 +25,7 @@ namespace TooDoo.SelfTest
             // Deletes a todo list item by id
             //wcfRh.DeleteTodoItem("1007");
 
-            wcfRh.MarkToDoItemAsFinished("1013");
+            wcfRh.MarkToDoItemAsFinished("1");
 
 
 

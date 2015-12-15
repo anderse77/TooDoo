@@ -132,6 +132,11 @@ namespace TooDoo.Service
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
 
+            if (context.GetErrorMessage() != null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+
             return todoListResult;
         }
 
@@ -163,6 +168,21 @@ namespace TooDoo.Service
             return new Tuple<int, int>(todosLeft, todosFinished);
         }
 
+        public void EditToDo(ToDo todo)
+        {
+            if (todo == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
 
+            context = new DAL(_connectionString);
+
+            context.UpdateToDo(todo);
+
+            if (context.GetErrorMessage() != null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+        }
     }
 }
