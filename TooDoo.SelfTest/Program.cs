@@ -12,7 +12,7 @@ namespace TooDoo.SelfTest
 {
 	class Program
 	{
-	    static string baseUrl = "http://localhost:2121/toodoo";
+	    static string baseUrl = "http://localhost:2121/todo";
         static WcfRequestHandler handler = new WcfRequestHandler();
 		static void Main(string[] args)
 		{

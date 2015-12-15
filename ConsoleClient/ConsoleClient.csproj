@@ -35,6 +35,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,10 +55,6 @@
     <ProjectReference Include="..\TooDoo.Entities\TooDoo.Entities.csproj">
       <Project>{b060f666-de8c-4971-a411-c0d478954df8}</Project>
       <Name>TooDoo.Entities</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TooDoo.Services\TooDoo.Services.csproj">
-      <Project>{0e02e746-b485-466c-9f39-9824edb869a5}</Project>
-      <Name>TooDoo.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

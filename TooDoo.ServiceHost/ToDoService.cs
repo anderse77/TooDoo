@@ -7,15 +7,18 @@ using System.Text;
 using TooDoo.Entities;
 using TooDoo.Data;
 using System.Configuration;
+using System.ServiceModel.Web;
+using System.Net;
 
-namespace TooDoo.Services
+namespace TooDoo.Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        DAL context = new DAL("Data Source=Anders-Bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;");
-        //DAL context = new DAL("");
+        private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
+        private DAL context;
+
         /// <summary>
         /// Returns a todo list by name
         /// </summary>
@@ -23,11 +26,20 @@ namespace TooDoo.Services
         /// <returns></returns>
         public List<ToDo> GetToDoListByName(string name)
         {
+            context = new DAL(_connectionString);
+
             try
             {
-                return context.GetToDoListByName(name);
+                List<ToDo> todoListResult = context.GetToDoListByName(name);
+
+                if(todoListResult == null)
+                {
+                    throw new FaultException(context.GetErrorMessage());
+                }
+
+                return todoListResult;
             }
-            catch (Exception exception)
+            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
             {
                 throw new FaultException(exception.Message + exception.StackTrace);
             }
@@ -39,11 +51,13 @@ namespace TooDoo.Services
         /// <param name="todo"></param>
         public void AddTodoItem(ToDo todo)
         {
+            context = new DAL(_connectionString);
+
             try
             {
                 context.AddToDo(todo);
             }
-            catch (Exception exception)
+            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
             {
                 throw new FaultException(exception.Message + exception.StackTrace);
             }
@@ -55,11 +69,13 @@ namespace TooDoo.Services
         /// <param name="id"></param>
         public void DeleteToDoItem(string id)
         {
+            context = new DAL(_connectionString);
+
             try
             {
                 context.DeleteToDo(Convert.ToInt32(id));
             }
-            catch (Exception exception)
+            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
             {
                 throw new FaultException(exception.Message + exception.StackTrace);
             }
@@ -67,6 +83,8 @@ namespace TooDoo.Services
 
         public void MarkToDoItemAsFinished(ToDo todo)
         {
+            context = new DAL(_connectionString);
+
             try
             {
                 ToDo toDo = context.GetToDoListById(todo.Id);
@@ -79,7 +97,7 @@ namespace TooDoo.Services
             }
         }
 
-        public bool CreateToDoList(string name)
+        public bool CreateToDo(string name)
         {
             throw new NotImplementedException();
         }
