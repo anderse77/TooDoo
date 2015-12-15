@@ -16,9 +16,8 @@ namespace TooDoo.Services
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        DAL context = new DAL("");
+        DAL context = new DAL("Data Source=Anders-Bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;");
         //DAL context = new DAL("");
-
         /// <summary>
         /// Returns a todo list by name
         /// </summary>
