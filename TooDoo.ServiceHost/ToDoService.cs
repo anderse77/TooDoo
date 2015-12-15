@@ -28,21 +28,14 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            try
-            {
-                List<ToDo> todoListResult = context.GetToDoListByName(name);
+            List<ToDo> todoListResult = context.GetToDoListByName(name);
 
-                if(todoListResult == null)
-                {
-                    throw new FaultException(context.GetErrorMessage());
-                }
+            //if (todoListResult == null)
+            //{
+                throw new WebFaultException<string>(context.GetErrorMessage() ,HttpStatusCode.SeeOther);
+            //}
 
-                return todoListResult;
-            }
-            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
-            {
-                throw new FaultException(exception.Message + exception.StackTrace);
-            }
+            return todoListResult;
         }
 
         /// <summary>
@@ -53,13 +46,11 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            try
+            context.AddToDo(todo);
+
+            if(context.GetErrorMessage() != "")
             {
-                context.AddToDo(todo);
-            }
-            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
-            {
-                throw new FaultException(exception.Message + exception.StackTrace);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
 
@@ -71,13 +62,11 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            try
+            context.DeleteToDo(Convert.ToInt32(id));
+
+            if (context.GetErrorMessage() != "")
             {
-                context.DeleteToDo(Convert.ToInt32(id));
-            }
-            catch (Exception exception) //Kan med nuvarande DAL 2015-12-15 klass aldrig hända!
-            {
-                throw new FaultException(exception.Message + exception.StackTrace);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
 
@@ -85,15 +74,13 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            try
+            ToDo toDo = context.GetToDoListById(todo.Id);
+            toDo.Finnished = true;
+            context.UpdateToDo(toDo);
+
+            if (context.GetErrorMessage() != "")
             {
-                ToDo toDo = context.GetToDoListById(todo.Id);
-                toDo.Finnished = true;
-                context.UpdateToDo(toDo);
-            }
-            catch (Exception exception)
-            {                
-                throw new FaultException(exception.Message + exception.StackTrace);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
 
