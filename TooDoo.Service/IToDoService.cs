@@ -30,6 +30,15 @@ namespace TooDoo.Service
         void AddTodoItem(ToDo todo);
 
         [OperationContract]
+        [WebInvoke(
+            Method = "POST",
+            UriTemplate = "todoLists/{listName}",
+            ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.WrappedResponse)]
+        void AddMultipleTodoItems(string listName, List<ToDo> todo);
+
+        [OperationContract]
         [WebInvoke(Method = "DELETE", UriTemplate = "todo/{id}")]
         void DeleteToDoItem(string id);
 

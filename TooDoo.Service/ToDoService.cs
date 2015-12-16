@@ -65,6 +65,32 @@ namespace TooDoo.Service
         }
 
         /// <summary>
+        /// Adds multiple todo items
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <param name="todo"></param>
+        public void AddMultipleTodoItems(string listName, List<ToDo> todo)
+        {
+            context = new DAL(_connectionString);
+
+            if (String.IsNullOrEmpty(listName)
+                || todo == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
+            if (context.GetToDoListByName(listName) == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
+            foreach (var item in todo)
+            {
+                context.AddToDo(item);
+            }
+        }
+
+        /// <summary>
         /// Deletes a todo item
         /// </summary>
         /// <param name="id"></param>

@@ -53,6 +53,34 @@ namespace TooDoo.SelfTest
         }
 
         /// <summary>
+        /// Adds multiple todo items
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <param name="todo"></param>
+        /// <returns></returns>
+        public ToDo AddTodoItem(string listName, string items)
+        {
+            List<ToDo> todoList = new List<ToDo>();
+
+            foreach (var item in items.Split(','))
+            {
+                ToDo todo = new ToDo()
+                {
+                    CreatedDate = DateTime.Now,
+                    Name = listName,
+                    Description = item.Trim(),
+                    DeadLine = DateTime.Now.AddDays(1)
+                };
+
+                todoList.Add(todo);
+            }
+
+            string request = this.SendRequest("/todoLists/" + listName, "POST", todoList);
+
+            return new JavaScriptSerializer().Deserialize<ToDo>(request);
+        }
+
+        /// <summary>
         /// Deletes a todo item
         /// </summary>
         /// <param name="id"></param>
