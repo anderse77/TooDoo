@@ -6,13 +6,12 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TooDoo.Entities;
-using TooDoo.Service;
 
 namespace TooDoo.SelfTest
 {
 	class Program
 	{
-	    static string baseUrl = "http://localhost:2121/todo";
+	    static string baseUrl = "http://localhost:2121/toodoo";
         static WcfRequestHandler handler = new WcfRequestHandler();
 		static void Main(string[] args)
 		{
@@ -26,7 +25,7 @@ namespace TooDoo.SelfTest
             // Deletes a todo list item by id
             //wcfRh.DeleteTodoItem("1007");
 
-            //wcfRh.MarkToDoItemAsFinished("1013");
+            wcfRh.MarkToDoItemAsFinished("3");
 
 
 
@@ -39,18 +38,18 @@ namespace TooDoo.SelfTest
 
             try
             {
-                //ServiceHost host = new ServiceHost(typeof(Services.ToDoService));
-                //host.Open();
-                //Console.WriteLine("Hit any key to exit");
-                //Console.WriteLine($"Skapa en att-göra-lista   {baseUrl}/todo/ http-metod: GET");
-                //Console.WriteLine($"Att hämta en att-göra-lista   {baseUrl}/todo/name där name är det unika namnet på att-göra-listan");
-                //Console.WriteLine($"Att ta bort en att-göra lista {baseUrl}/todo/id där id är det unika id:et på en att-göra-lista");
-                //Console.ReadKey();
-                //host.Close();
+                ServiceHost host = new ServiceHost(typeof(Service.ToDoService));
+                host.Open();
+                Console.WriteLine("Hit any key to exit");
+                Console.WriteLine($"Skapa en att-göra-lista   {baseUrl}/todo/");
+                Console.WriteLine($"Att hämta en att-göra-lista   {baseUrl}/todo/name där name är det unika namnet på att-göra-listan");
+                Console.WriteLine($"Att ta bort en att-göra lista {baseUrl}/todo/id där id är det unika id:et på en att-göra-lista");
+                Console.ReadKey();
+                host.Close();
                 //ToDo toDo = handler.DeleteTodoItem("4");
                 //Console.WriteLine(toDo.Name);
-                ToDo toDo = handler.MarkToDoItemAsFinished("1");
-                Console.WriteLine(toDo.Name);
+                //ToDo toDo = handler.MarkToDoItemAsFinnished("1");
+                //Console.WriteLine(toDo.Name);
             }
             catch (Exception ex)
             {

@@ -58,7 +58,7 @@
       <Project>{b060f666-de8c-4971-a411-c0d478954df8}</Project>
       <Name>TooDoo.Entities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TooDoo.ServiceHost\TooDoo.Service.csproj">
+    <ProjectReference Include="..\TooDoo.Service\TooDoo.Service.csproj">
       <Project>{ef1e801f-b099-461c-a73e-c7428236f32a}</Project>
       <Name>TooDoo.Service</Name>
     </ProjectReference>

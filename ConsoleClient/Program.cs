@@ -15,28 +15,36 @@ namespace ConsoleClient
         static IToDoService service;
         static void Main(string[] args)
         {
-            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121/todo"))
+            using (ChannelFactory<IToDoService> channelFactory = new ChannelFactory<IToDoService>(new WebHttpBinding(), "http://localhost:2121"))
             {
                 channelFactory.Endpoint.EndpointBehaviors.Add(new WebHttpBehavior());
                 service = channelFactory.CreateChannel();
 
                 Console.WindowWidth = 110;
+                Console.WindowHeight = 60;
 
                 do
                 {
                     PrintMenu();
                     int input = AskUserForNumericInput();
                     ProcessSelection(input);
+                    AskForAnyKeyToContinue();
                 } while (true);
             }
         }
 
         public static void PrintMenu()
         {
+            Console.Clear();
+            printCompleteList();
+            Console.WriteLine();
             Console.WriteLine("TooDoo Services");
             Console.WriteLine("===============");
             Console.WriteLine("(1) Hämta att-göra-lista");
-            Console.WriteLine("(2) Skapa en att-göra-lista");
+            Console.WriteLine("(2) Skapa en att-göra-task");
+            Console.WriteLine("(3) Sätt en att göra task till färdig");
+            Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
+            Console.WriteLine("(5) Ta bort en att-göra task");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -44,17 +52,46 @@ namespace ConsoleClient
         {
             switch (input)
             {
-                case 1:
-                    PrintToDoListByUserGivenName();
-                    break;
-                case 2:
-                    CreateToDoListByUserInput();
-                    break;
+                case 1: PrintToDoListByUserGivenName(); break;
+                case 2: CreateToDoListByUserInput(); break;
+                case 3: SetToDoToFinished(); break;
+                case 4: GetLeftAndFinishedToDo(); break;
+                case 5: deleteTodoItemById(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+
+        private static void GetLeftAndFinishedToDo()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter kvar och antalet avklarade: ");
+            string name = Console.ReadLine();
+            var tuple = service.GetNumberTodoLeftAndFinishedinListByName(name);
+            Console.WriteLine($"Antal punkter kvar: {tuple.Item1}");
+            Console.WriteLine($"Antal punkter avklarade: {tuple.Item2}");
+        }
+
+        private static void printCompleteList()
+        {
+            List<ToDo> completeList = service.GetCompleteList();
+            completeList.ForEach(x => 
+            {
+
+                Console.WriteLine($"{x.Id,-8}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
+                                  $"{x.DeadLine.ToShortDateString(),-12}{x.EstimationTime,-5}{x.Finnished}");
+
+
+            });
+        }
+
+        private static void SetToDoToFinished()
+        {
+            Console.Write("Ange det todo id du vill markera som klar: ");
+            int todoIdToSetAsFinished = AskUserForNumericInput();
+
+            service.MarkToDoItemAsFinished(todoIdToSetAsFinished.ToString());
         }
 
         private static void CreateToDoListByUserInput()
@@ -92,12 +129,24 @@ namespace ConsoleClient
             toDo.ForEach(s =>
             {
                 string finished = s.Finnished ? "Finished" : "Not finished";
-                Console.WriteLine($"Description: {s.Description} " +
+                Console.WriteLine($"Id: {s.Id} " +
+                                  $"Description: {s.Description} " +
                                   $"Estimation time: {s.EstimationTime} " +
                                   $"Created: {s.CreatedDate} " +
                                   $"Deadline: {s.DeadLine} " +
                                   $"{finished}");
             });
+        }
+
+        /// <summary>
+        /// Deletes a todo item by id
+        /// </summary>
+        private static void deleteTodoItemById()
+        {
+            Console.WriteLine("Ange det todo id du vill ta bort: ");
+            int id = AskUserForNumericInput();
+
+            service.DeleteToDoItem(id.ToString());
         }
 
         public static int AskUserForNumericInput()
@@ -149,6 +198,13 @@ namespace ConsoleClient
                 }
             } while (!inputWasDateTime);
             return inputAsDateTime;
+        }
+
+        public static void AskForAnyKeyToContinue()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press Any key to continue!");
+            Console.ReadKey();
         }
     }
 }
