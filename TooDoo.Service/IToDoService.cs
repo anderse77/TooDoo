@@ -13,9 +13,10 @@ namespace TooDoo.Service
 	public interface IToDoService
 	{
         [OperationContract]
-        [WebGet(UriTemplate = "todo/GetAllTodo", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todo/all", ResponseFormat = WebMessageFormat.Json)]
         List<ToDo> GetCompleteList();
 
+        //Behövs verkligen requestformat på GET?
         [OperationContract]
         [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
