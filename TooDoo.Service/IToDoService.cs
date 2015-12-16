@@ -45,7 +45,7 @@ namespace TooDoo.Service
 
         [OperationContract]
         [WebGet(
-            UriTemplate = "todo/NbrRemainingAndFinished/{name}", 
+            UriTemplate = "todo/remainingandfinished/{name}", 
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
          Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name);
@@ -53,7 +53,7 @@ namespace TooDoo.Service
         [OperationContract]
         [WebInvoke(
             Method = "PUT", 
-            UriTemplate = "todo/update",
+            UriTemplate = "todo/",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void EditToDo(ToDo todo);
