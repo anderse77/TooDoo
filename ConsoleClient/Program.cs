@@ -57,7 +57,7 @@ namespace ConsoleClient
                 case 2: CreateToDoListByUserInput(); break;
                 case 3: SetToDoToFinished(); break;
                 case 4: GetLeftAndFinishedToDo(); break;
-                case 5: deleteTodoItemById(); break;
+                case 5: deleteTodoItem(); break;
                 case 6: addMultipleToDoItems(); break;
                 default:
                     Console.WriteLine();
@@ -178,14 +178,25 @@ namespace ConsoleClient
         }
 
         /// <summary>
-        /// Deletes a todo item by id
+        /// Deletes a todo item
         /// </summary>
-        private static void deleteTodoItemById()
+        private static void deleteTodoItem()
         {
-            Console.WriteLine("Ange det todo id du vill ta bort: ");
-            int id = AskUserForNumericInput();
+            Console.WriteLine("Ange namnet på todolistan där du vill ta bort en punkt: ");
+            string listName = Console.ReadLine();
 
-            service.DeleteToDoItem(id.ToString());
+            if (!service.GetToDoListByName(listName)
+                .Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", listName);
+            }
+            else
+            {
+                Console.WriteLine("Ange det todo id du vill ta bort: ");
+                int id = AskUserForNumericInput();
+
+                service.DeleteToDoItem(listName, id.ToString());
+            }
         }
 
         public static int AskUserForNumericInput()
