@@ -16,7 +16,7 @@ namespace TooDoo.Service
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        private string _connectionString = "Data Source=Anders-Bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True";
+        private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
         private DAL context;       
 
         /// <summary>
@@ -86,24 +86,34 @@ namespace TooDoo.Service
 
             foreach (var item in todo)
             {
-                context.AddToDo(item);
+                try
+                {
+                    context.AddToDo(item);
+                }
+                catch (Exception ex)
+                {
+                    throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
+                }
             }
         }
 
         /// <summary>
         /// Deletes a todo item
         /// </summary>
+        /// <param name="listName"></param>
         /// <param name="id"></param>
-        public void DeleteToDoItem(string id)
+        public void DeleteToDoItem(string listName, string id)
         {
             context = new DAL(_connectionString);
 
-            if (id == null)
+            if (String.IsNullOrEmpty(listName)
+                || String.IsNullOrEmpty(id))
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
 
-            if (context.GetToDoById(Convert.ToInt32(id)) == null)
+            if (context.GetToDoListByName(listName) == null
+                || context.GetToDoById(Convert.ToInt32(id)) == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
@@ -112,7 +122,7 @@ namespace TooDoo.Service
             {
                 context.DeleteToDo(Convert.ToInt32(id));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
             }
