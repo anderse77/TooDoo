@@ -6,7 +6,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TooDoo.Entities;
-using TooDoo.Services;
+using TooDoo.Service;
 
 namespace TooDoo.SelfTest
 {
