@@ -45,6 +45,7 @@ namespace ConsoleClient
             Console.WriteLine("(3) Sätt en att göra task till färdig");
             Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
             Console.WriteLine("(5) Ta bort en att-göra task");
+            Console.WriteLine("(6) Skapa flera att-göra tasks");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -57,6 +58,7 @@ namespace ConsoleClient
                 case 3: SetToDoToFinished(); break;
                 case 4: GetLeftAndFinishedToDo(); break;
                 case 5: deleteTodoItemById(); break;
+                case 6: addMultipleToDoItems(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
@@ -115,6 +117,43 @@ namespace ConsoleClient
                 Finnished = false
             };
             service.AddTodoItem(toDoToCreate);
+        }
+        
+        /// <summary>
+        /// Adds multiple todo items
+        /// </summary>
+        private static void addMultipleToDoItems()
+        {
+            Console.WriteLine("Ange listan du önskar lägga till flera punkter till: ");
+            string listName = Console.ReadLine();
+
+            if (!service.GetToDoListByName(listName)
+                .Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", listName);
+            }
+            else
+            {
+                Console.WriteLine("Ange beskrivning på de punkter du önskar addera till listan, separera dem med komma (,): ");
+                string items = Console.ReadLine();
+
+                List<ToDo> todoList = new List<ToDo>();
+
+                foreach (var item in items.Split(','))
+                {
+                    ToDo todo = new ToDo()
+                    {
+                        CreatedDate = DateTime.Now,
+                        Name = listName,
+                        Description = item.Trim(),
+                        DeadLine = DateTime.Now.AddDays(1)
+                    };
+
+                    todoList.Add(todo);
+                }
+
+                service.AddMultipleTodoItems(listName, todoList);
+            }    
         }
 
         public static void PrintToDoListByUserGivenName()
