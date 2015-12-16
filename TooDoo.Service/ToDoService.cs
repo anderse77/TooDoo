@@ -86,34 +86,24 @@ namespace TooDoo.Service
 
             foreach (var item in todo)
             {
-                try
-                {
-                    context.AddToDo(item);
-                }
-                catch (Exception ex)
-                {
-                    throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
-                }
+                context.AddToDo(item);
             }
         }
 
         /// <summary>
         /// Deletes a todo item
         /// </summary>
-        /// <param name="listName"></param>
         /// <param name="id"></param>
-        public void DeleteToDoItem(string listName, string id)
+        public void DeleteToDoItem(string id)
         {
             context = new DAL(_connectionString);
 
-            if (String.IsNullOrEmpty(listName)
-                || String.IsNullOrEmpty(id))
+            if (id == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
 
-            if (context.GetToDoListByName(listName) == null
-                || context.GetToDoById(Convert.ToInt32(id)) == null)
+            if (context.GetToDoById(Convert.ToInt32(id)) == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }

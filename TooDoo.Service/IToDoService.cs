@@ -40,9 +40,8 @@ namespace TooDoo.Service
         void AddMultipleTodoItems(string listName, List<ToDo> todo);
 
         [OperationContract]
-        [WebInvoke(Method = "DELETE", 
-            UriTemplate = "todoLists/{listName}/{id}")]
-        void DeleteToDoItem(string listName, string id);
+        [WebInvoke(Method = "DELETE", UriTemplate = "todo/{id}")]
+        void DeleteToDoItem(string id);
 
 	    [OperationContract]
 	    [WebInvoke( 
