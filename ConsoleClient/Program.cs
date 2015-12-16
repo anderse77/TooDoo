@@ -21,7 +21,7 @@ namespace ConsoleClient
                 service = channelFactory.CreateChannel();
 
                 Console.WindowWidth = 110;
-                Console.WindowHeight = 60;
+                Console.WindowHeight = 26;
 
                 do
                 {
@@ -36,7 +36,7 @@ namespace ConsoleClient
         public static void PrintMenu()
         {
             Console.Clear();
-            printCompleteList();
+            PrintCompleteList();
             Console.WriteLine();
             Console.WriteLine("TooDoo Services");
             Console.WriteLine("===============");
@@ -45,6 +45,7 @@ namespace ConsoleClient
             Console.WriteLine("(3) Sätt en att göra task till färdig");
             Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
             Console.WriteLine("(5) Ta bort en att-göra task");
+            Console.WriteLine("(6) Hämta alla avklarade punkter i en given att-göra-lista");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -57,11 +58,20 @@ namespace ConsoleClient
                 case 3: SetToDoToFinished(); break;
                 case 4: GetLeftAndFinishedToDo(); break;
                 case 5: deleteTodoItemById(); break;
+                case 6: GetFinishedToDoByUserInput(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+
+        private static void GetFinishedToDoByUserInput()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla avklarade punkter i: ");
+            string name = Console.ReadLine();
+            List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByName(name);
+            PrintToDoList(finishedToDos);
         }
 
         private static void GetLeftAndFinishedToDo()
@@ -73,17 +83,10 @@ namespace ConsoleClient
             Console.WriteLine($"Antal punkter avklarade: {tuple.Item2}");
         }
 
-        private static void printCompleteList()
+        private static void PrintCompleteList()
         {
             List<ToDo> completeList = service.GetCompleteList();
-            completeList.ForEach(x => 
-            {
-
-                Console.WriteLine($"{x.Id,-8}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
-                                  $"{x.DeadLine.ToShortDateString(),-12}{x.EstimationTime,-5}{x.Finnished}");
-
-
-            });
+            PrintToDoList(completeList);
         }
 
         private static void SetToDoToFinished()
@@ -205,6 +208,18 @@ namespace ConsoleClient
             Console.WriteLine();
             Console.WriteLine("Press Any key to continue!");
             Console.ReadKey();
+        }
+
+        static void PrintToDoList(List<ToDo> toDoList)
+        {
+            toDoList.ForEach(x =>
+            {
+
+                Console.WriteLine($"{x.Id,-8}{x.Name,-10}{x.Description,-30}{x.CreatedDate.ToShortDateString(),-12}" +
+                                  $"{x.DeadLine.ToShortDateString(),-12}{x.EstimationTime,-5}{x.Finnished}");
+
+
+            });
         }
     }
 }

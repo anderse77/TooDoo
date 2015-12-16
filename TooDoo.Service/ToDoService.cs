@@ -16,7 +16,7 @@ namespace TooDoo.Service
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
+        private string _connectionString = "Data Source=Anders-Bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True";
         private DAL context;       
 
         /// <summary>
@@ -106,7 +106,8 @@ namespace TooDoo.Service
 
             context = new DAL(_connectionString);
 
-            try {
+            try
+            {
                 ToDo toDo = context.GetToDoById(Convert.ToInt32(id));
                 toDo.Finnished = true;
                 context.UpdateToDo(toDo);
@@ -188,6 +189,30 @@ namespace TooDoo.Service
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
+        }
+
+        public List<ToDo> GetCompleteListOfFinishedByName(string name)
+        {
+            if (name == null)
+            {
+                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
+            }
+
+            context = new DAL(_connectionString);
+
+            List<ToDo> todoListResult = context.GetToDoListByName(name);
+
+            if (todoListResult == null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+
+            if (context.GetErrorMessage() != null)
+            {
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+            }
+
+            return todoListResult.Where(x => x.Finnished).ToList();
         }
     }
 }

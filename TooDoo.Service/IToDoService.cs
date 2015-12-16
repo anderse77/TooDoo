@@ -16,7 +16,6 @@ namespace TooDoo.Service
         [WebGet(UriTemplate = "todo/all", ResponseFormat = WebMessageFormat.Json)]
         List<ToDo> GetCompleteList();
 
-        //Behövs verkligen requestformat på GET?
         [OperationContract]
         [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
@@ -45,7 +44,7 @@ namespace TooDoo.Service
 
         [OperationContract]
         [WebGet(
-            UriTemplate = "todo/remainingandfinished/{name}", 
+            UriTemplate = "todo/numberofremainingandfinished/{name}", 
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
          Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name);
@@ -57,5 +56,12 @@ namespace TooDoo.Service
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void EditToDo(ToDo todo);
-    }
+
+	    [OperationContract]
+	    [WebGet(
+	        UriTemplate = "todo/finished/{name}",
+	        ResponseFormat = WebMessageFormat.Json,
+            RequestFormat = WebMessageFormat.Json)]
+	    List<ToDo> GetCompleteListOfFinishedByName(string name);
+	}
 }
