@@ -132,7 +132,7 @@ namespace TooDoo.Service
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
-
+        //Markerar en punkt som avklarad i en att-göra-lista.
         public void MarkToDoItemAsFinished(string id)
         {
             if (id == null)
@@ -226,7 +226,7 @@ namespace TooDoo.Service
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
             }
         }
-
+        //Hämtar alla avklarade punkter i en given att-göra-lista.
         public List<ToDo> GetCompleteListOfFinishedByName(string name)
         {
             if (name == null)

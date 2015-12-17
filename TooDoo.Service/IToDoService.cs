@@ -12,10 +12,18 @@ namespace TooDoo.Service
 	[ServiceContract]
 	public interface IToDoService
 	{
+        /// <summary>
+        /// Hämtar hela listan.
+        /// </summary>
+        /// <returns></returns>
         [OperationContract]
-        [WebGet(UriTemplate = "todo/all", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todo/", ResponseFormat = WebMessageFormat.Json)]
         List<ToDo> GetCompleteList();
-
+        /// <summary>
+        /// Hämtar en att-göra-lista med ett givet namn.
+        /// </summary>
+        /// <param name="name">Namnet på att-göra-listan som ska hämtas.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
 		List<ToDo> GetToDoListByName(string name);
@@ -66,7 +74,11 @@ namespace TooDoo.Service
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
         void EditToDo(ToDo todo);
-
+        /// <summary>
+        /// Hämtar alla avklarade punkter i en given att-göra-lista.
+        /// </summary>
+        /// <param name="name">Namnet på att-göra-listan vars avklarade punkter ska hämtas.</param>
+        /// <returns></returns>
 	    [OperationContract]
 	    [WebGet(
 	        UriTemplate = "todo/finished/{name}",
