@@ -81,7 +81,7 @@ namespace TooDoo.Service
         /// <returns></returns>
 	    [OperationContract]
 	    [WebGet(
-	        UriTemplate = "todo/finished/{name}",
+	        UriTemplate = "todo/{name}/finished",
 	        ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 	    List<ToDo> GetCompleteListOfFinishedByName(string name);

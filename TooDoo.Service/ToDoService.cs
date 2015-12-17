@@ -16,7 +16,7 @@ namespace TooDoo.Service
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        private string _connectionString = @"Data Source = (local); Initial Catalog = DB_ToDoList; User ID = RestFullUser; Password = RestFull123";
+        private string _connectionString = "Data Source=anders-bärbar;Initial Catalog = DB_ToDoList; Integrated Security = True;";
         private DAL context;       
 
         /// <summary>
@@ -150,12 +150,12 @@ namespace TooDoo.Service
             }
             catch(Exception ex)
             {
-                throw new WebFaultException<string>(ex.Message, HttpStatusCode.SeeOther);
+                throw new WebFaultException<string>(ex.Message, HttpStatusCode.InternalServerError);
             }
 
             if (context.GetErrorMessage() != null)
             {
-                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.InternalServerError);
             }
         }
 
@@ -240,12 +240,12 @@ namespace TooDoo.Service
 
             if (todoListResult == null)
             {
-                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.InternalServerError);
             }
 
             if (context.GetErrorMessage() != null)
             {
-                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.SeeOther);
+                throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.InternalServerError);
             }
 
             return todoListResult.Where(x => x.Finnished).ToList();
