@@ -13,77 +13,112 @@ namespace TooDoo.Service
 	public interface IToDoService
 	{
         /// <summary>
-        /// Hämtar hela listan.
+        /// Gets all todos from all lists
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        [WebGet(UriTemplate = "todo/", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todos/", ResponseFormat = WebMessageFormat.Json)]
         List<ToDo> GetCompleteList();
+
         /// <summary>
-        /// Hämtar en att-göra-lista med ett givet namn.
+        /// Gets all todos by listName
         /// </summary>
-        /// <param name="name">Namnet på att-göra-listan som ska hämtas.</param>
+        /// <param name="listName">Namnet på att-göra-listan som ska hämtas.</param>
         /// <returns></returns>
         [OperationContract]
-        [WebGet(UriTemplate = "todo/{name}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
-		List<ToDo> GetToDoListByName(string name);
+        [WebGet(UriTemplate = "todos/{listName}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+		List<ToDo> GetToDoListByName(string listName);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="todo"></param>
         [OperationContract]
         [WebInvoke(
             Method = "POST", 
-            UriTemplate = "todo/", 
+            UriTemplate = "todos/", 
             ResponseFormat = WebMessageFormat.Json, 
             RequestFormat = WebMessageFormat.Json, 
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
         void AddTodoItem(ToDo todo);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <param name="todo"></param>
         [OperationContract]
         [WebInvoke(
             Method = "POST",
-            UriTemplate = "todoLists/{listName}",
+            UriTemplate = "todos/{listName}",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
         void AddMultipleTodoItems(string listName, List<ToDo> todo);
 
+
         [OperationContract]
         [WebInvoke(Method = "DELETE", 
-            UriTemplate = "todoLists/{listName}/{id}")]
+            UriTemplate = "todoLists/{listName}/{id}")] //TODO: Anthon: borde ha URI todos/{Id}
         void DeleteToDoItem(string listName, string id);
 
+        /// <summary>
+        /// Sets a todo as finished
+        /// </summary>
+        /// <param name="id"></param>
 	    [OperationContract]
 	    [WebInvoke( 
             Method = "PUT", 
-            UriTemplate = "todo/finished/", 
+            UriTemplate = "todos/finished/{id}", 
             ResponseFormat = WebMessageFormat.Json, 
             RequestFormat = WebMessageFormat.Json, 
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
 	    void MarkToDoItemAsFinished(string id);
 
+        /// <summary>
+        /// Get number of not finished todos in a list.
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
         [OperationContract]
         [WebGet(
-            UriTemplate = "todo/numberofremainingandfinished/{name}", 
-            ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
-         Tuple<int, int> GetNumberTodoLeftAndFinishedinListByName(string name);
+            UriTemplate = "todos/{listName}/NumberNotFinished", 
+            ResponseFormat = WebMessageFormat.Json)]
+         int GetNumberTodosNotFinishedByListName(string listName);
 
+        /// <summary>
+        /// Get number of finished todos in a list.
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(
+            UriTemplate = "todos/{listName}/NumberFinished",
+            ResponseFormat = WebMessageFormat.Json)]
+        int GetNumberTodosFinishedByListName(string listName);
+
+        /// <summary>
+        /// Edit a already existing todo item.
+        /// </summary>
+        /// <param name="todo"></param>
         [OperationContract]
         [WebInvoke(
             Method = "PUT", 
-            UriTemplate = "todo/",
+            UriTemplate = "todos/{id}",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-        void EditToDo(ToDo todo);
+        void EditToDo(string id, ToDo todo);
+
         /// <summary>
-        /// Hämtar alla avklarade punkter i en given att-göra-lista.
+        /// Get all finished todos by listname
         /// </summary>
-        /// <param name="name">Namnet på att-göra-listan vars avklarade punkter ska hämtas.</param>
+        /// <param name="listName">The todo-list name</param>
         /// <returns></returns>
 	    [OperationContract]
 	    [WebGet(
-	        UriTemplate = "todo/{name}/finished",
+	        UriTemplate = "todos/{listName}/finished",
 	        ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
-	    List<ToDo> GetCompleteListOfFinishedByName(string name);
+	    List<ToDo> GetCompleteListOfFinishedByListName(string listName);
 	}
 }

@@ -81,7 +81,7 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla avklarade punkter i: ");
             string name = Console.ReadLine();
-            List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByName(name);
+            List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByListName(name);
             PrintToDoList(finishedToDos);
         }
 
@@ -89,9 +89,8 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter kvar och antalet avklarade: ");
             string name = Console.ReadLine();
-            var tuple = service.GetNumberTodoLeftAndFinishedinListByName(name);
-            Console.WriteLine($"Antal punkter kvar: {tuple.Item1}");
-            Console.WriteLine($"Antal punkter avklarade: {tuple.Item2}");
+            var nbrNotFinished = service.GetNumberTodosNotFinishedByListName(name);
+            Console.WriteLine($"Antal punkter kvar: {nbrNotFinished}");
         }
         /// <summary>
         /// Hämtar samtliga att-göra-listor från databasen och skriver ut dem på skärmen.
