@@ -23,7 +23,7 @@ namespace TooDoo.Service
         /// <summary>
         /// Gets all todos by listName
         /// </summary>
-        /// <param name="listName">Namnet på att-göra-listan som ska hämtas.</param>
+        /// <param name="listName">The name of the todo-list to be fetched.</param>
         /// <returns></returns>
         [OperationContract]
         [WebGet(UriTemplate = "todos/{listName}", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
@@ -59,7 +59,7 @@ namespace TooDoo.Service
 
         [OperationContract]
         [WebInvoke(Method = "DELETE", 
-            UriTemplate = "todoLists/{listName}/{id}")] //TODO: Anthon: borde ha URI todos/{Id}
+            UriTemplate = "todos/{listName}/{id}")] //TODO: Anthon: borde ha URI todos/{Id}
         void DeleteToDoItem(string listName, string id);
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         [OperationContract]
         [WebGet(
-            UriTemplate = "todos/{listName}/NumberNotFinished", 
+            UriTemplate = "todos/{listName}/numbernotfinished", 
             ResponseFormat = WebMessageFormat.Json)]
          int GetNumberTodosNotFinishedByListName(string listName);
 
@@ -93,7 +93,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         [OperationContract]
         [WebGet(
-            UriTemplate = "todos/{listName}/NumberFinished",
+            UriTemplate = "todos/{listName}/numberfinished",
             ResponseFormat = WebMessageFormat.Json)]
         int GetNumberTodosFinishedByListName(string listName);
 

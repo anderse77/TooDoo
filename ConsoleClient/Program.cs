@@ -14,7 +14,7 @@ namespace ConsoleClient
     {
         static IToDoService service;
         /// <summary>
-        /// Startar konsolklienten och själva applikationen så servicen kan testas.
+        /// Starts the client application.
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
@@ -37,7 +37,7 @@ namespace ConsoleClient
             }
         }
         /// <summary>
-        /// Skriver ut menyn på skärmen.
+        /// Prints the menu to the screen.
         /// </summary>
         public static void PrintMenu()
         {
@@ -49,10 +49,11 @@ namespace ConsoleClient
             Console.WriteLine("(1) Hämta att-göra-lista");
             Console.WriteLine("(2) Skapa en att-göra-task");
             Console.WriteLine("(3) Sätt en att göra task till färdig");
-            Console.WriteLine("(4) Hämta antal punkter som är kvar och avklarade i en todo lista");
-            Console.WriteLine("(5) Ta bort en att-göra task");
-            Console.WriteLine("(6) Hämta alla avklarade punkter i en given att-göra-lista");
-            Console.WriteLine("(7) Skapa flera att-göra tasks");
+            Console.WriteLine("(4) Hämta antal punkter som är avklarade i en att-göra-lista");
+            Console.WriteLine("(5) Hämtar antalet punkter som inte är avklarade i en att-göra-lista");
+            Console.WriteLine("(6) Ta bort en att-göra task");
+            Console.WriteLine("(7) Hämta alla avklarade punkter i en given att-göra-lista");
+            Console.WriteLine("(8) Skapa flera att-göra tasks");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -63,19 +64,28 @@ namespace ConsoleClient
                 case 1: PrintToDoListByUserGivenName(); break;
                 case 2: CreateToDoListByUserInput(); break;
                 case 3: SetToDoToFinished(); break;
-                case 4: GetLeftAndFinishedToDo(); break;
-                case 5: DeleteTodoItem(); break;
-                case 6: GetFinishedToDoByUserInput(); break;
-                case 7: AddMultipleToDoItems(); break;
+                case 4: GetNumberOfTodosfinished(); break;
+                case 5: GetNumberOfTodosLeft(); break;
+                case 6: DeleteTodoItem(); break;
+                case 7: GetFinishedToDoByUserInput(); break;
+                case 8: AddMultipleToDoItems(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
         }
+
+        private static void GetNumberOfTodosfinished()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet avklarade punkter i: ");
+            string name = Console.ReadLine();
+            var nbrFinished = service.GetNumberTodosFinishedByListName(name);
+            Console.WriteLine($"Antal avklarade punkter: {nbrFinished}");
+        }
+
         /// <summary>
-        /// Hämtar en given att-göra-lista med det namn som användaren anger, hämtar alla färdiga att-göra-punkter i den listan
-        /// och skriver ut den på skärmen.
+        /// fetches the finished todo-item in the todo-list with the name supplied by the user and prints it to the screen.
         /// </summary>
         private static void GetFinishedToDoByUserInput()
         {
@@ -84,23 +94,28 @@ namespace ConsoleClient
             List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByListName(name);
             PrintToDoList(finishedToDos);
         }
-
-        private static void GetLeftAndFinishedToDo()
+        /// <summary>
+        /// Gets the number of todo-items left in a list with the user-supplied name and prints the number of todo-items not
+        /// finished to the screen.
+        /// </summary>
+        private static void GetNumberOfTodosLeft()
         {
-            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter kvar och antalet avklarade: ");
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter som är kvar i: ");
             string name = Console.ReadLine();
             var nbrNotFinished = service.GetNumberTodosNotFinishedByListName(name);
             Console.WriteLine($"Antal punkter kvar: {nbrNotFinished}");
         }
         /// <summary>
-        /// Hämtar samtliga att-göra-listor från databasen och skriver ut dem på skärmen.
+        /// fetches all todo-lists from the database and prints them to the screen.
         /// </summary>
         private static void PrintCompleteList()
         {
             List<ToDo> completeList = service.GetCompleteList();
             PrintToDoList(completeList);
         }
-
+        /// <summary>
+        /// Sets the todo-item with the user-supplied id as finished.
+        /// </summary>
         private static void SetToDoToFinished()
         {
             Console.Write("Ange det todo id du vill markera som klar: ");
@@ -109,8 +124,7 @@ namespace ConsoleClient
             service.MarkToDoItemAsFinished(todoIdToSetAsFinished.ToString());
         }
         /// <summary>
-        /// Hämtar in data från användaren som representerar en instans av klassen ToDo. Skickar in
-        /// den i databasen via servicen.
+        ///Creates a new todo-list using user-supplied data and adds it to the database.
         /// </summary>
         private static void CreateToDoListByUserInput()
         {
@@ -171,7 +185,9 @@ namespace ConsoleClient
                 service.AddMultipleTodoItems(listName, todoList);
             }    
         }
-
+        /// <summary>
+        /// Prints the todo-list with the user-supplied name to the screen.
+        /// </summary>
         public static void PrintToDoListByUserGivenName()
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta: ");
@@ -215,10 +231,10 @@ namespace ConsoleClient
             }
         }
         /// <summary>
-        /// Ber användaren skriva in en textrad och validerar att den består av enbart siffror.
-        /// När användaren skrivit in en rad bestående av enbart siffror returneras den raden.
+        /// Asks the user to write a line of text, validates that it can be parsed to an int and returns it to the user
+        /// after it validate.
         /// </summary>
-        /// <returns>Talet användaren skrev in.</returns>
+        /// <returns>The user supplied integer.</returns>
         public static int AskUserForNumericInput()
         {
             int inputAsNumber;
@@ -236,12 +252,12 @@ namespace ConsoleClient
             return inputAsNumber;
         }
         /// <summary>
-        /// Frågar användaren om en textrad, validerar det enligt ett givet villkor och returnerar textraden s snart
-        /// abvändaren matar in något som stämmer med villkoret.
+        /// Asks the user for a line of text, validates it according to the given predicate,
+        /// and makes sure that the returned string validates according to the predicate.
         /// </summary>
-        /// <param name="condition">Villkoret som textraden ska valideras enligt.</param>
-        /// <param name="errorMessage">felmeddelandet som ges till användaren så länge textraden inte validerar.</param>
-        /// <returns>Textraden som skrivits in av användaren och som validerar enligt villkoret.</returns>
+        /// <param name="condition">The predicate used for validation.</param>
+        /// <param name="errorMessage">The errormessage given to the user as long as it does not validat.</param>
+        /// <returns>The validated string to be returned.</returns>
         public static string AskUserForInput(Predicate<string> condition, string errorMessage)
         {
             bool conditionWasMet;
@@ -260,10 +276,9 @@ namespace ConsoleClient
         }
 
         /// <summary>
-        /// Frågar en användare efter att ange ett datum och validerar att det verkligen är ett datum som skrivs in
-        /// returnerar datumet snart det validerar.
+        /// Asks the user for a date until it validates as a date and then reutrns it.
         /// </summary>
-        /// <returns>Datumet användaren skriver in.</returns>
+        /// <returns>The supplied date.</returns>
         public static DateTime AskUserForDateTime()
         {
             DateTime inputAsDateTime;
@@ -289,9 +304,9 @@ namespace ConsoleClient
         }
 
         /// <summary>
-        /// Skriver ut en att-göra-lista på skärmen.
+        /// Prints a todo-list to the screen.
         /// </summary>
-        /// <param name="toDoList">listan som ska skrivas ut.</param>
+        /// <param name="toDoList">The list to be printed.</param>
         static void PrintToDoList(List<ToDo> toDoList)
         {
             toDoList.ForEach(x =>
