@@ -44,7 +44,7 @@ namespace TooDoo.Service
                 throw new WebFaultException<string>(context.GetErrorMessage() ,HttpStatusCode.InternalServerError);
             }
 
-            return todoListResult;
+            return GetExactMatchingTodos(todoListResult, name); //DAL search listnames with wildcard
         }
 
         /// <summary>
@@ -74,6 +74,7 @@ namespace TooDoo.Service
             CheckInput(todo);
             context = new DAL(_connectionString);
 
+            //TODO: Anthon: Använd GetExactMatchingTodos(todoListResult, name) för att hantera viktiga punkter
             if (context.GetToDoListByName(listName) == null) //TODO: Antho: null returneras bara om xception händer i DAL. För att kolla felaktigt listName kolla context.GetToDoListByName(listName).Count == 0.
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
@@ -106,6 +107,8 @@ namespace TooDoo.Service
             //{
             //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             //}
+
+            //TODO: Anthon: Använd GetExactMatchingTodos(todoListResult, name); för att hantera viktiga punkter
 
             //TODO: Anthon går inte att kolla null, DAL returnerar bara null då exception inträffar.
             //Kolla istället att listan inte är tom och att todo objektet som returneras har Id != 0.
@@ -181,9 +184,11 @@ namespace TooDoo.Service
             List<ToDo> todos = context.GetToDoListByName(listName);
             CheckDALError();
 
-            if (todos.Count == 0)
-                throw new WebFaultException(HttpStatusCode.NotFound);            
+            todos = GetExactMatchingTodos(todos, listName);
 
+            if (todos.Count == 0)
+                throw new WebFaultException(HttpStatusCode.NotFound);  
+            
             return todos.Where(x => x.Finnished == false).Count();
         }
 
@@ -198,6 +203,8 @@ namespace TooDoo.Service
 
             List<ToDo> todos = context.GetToDoListByName(listName);
             CheckDALError();
+
+            todos = GetExactMatchingTodos(todos, listName);
 
             if (todos.Count == 0)
                 throw new WebFaultException(HttpStatusCode.NotFound);
@@ -236,6 +243,8 @@ namespace TooDoo.Service
 
             List<ToDo> todoListResult = context.GetToDoListByName(listName);
             CheckDALError();
+
+            todoListResult = GetExactMatchingTodos(todoListResult, listName);
 
             if (todoListResult.Count == 0)
                 throw new WebFaultException(HttpStatusCode.NotFound);
@@ -291,6 +300,53 @@ namespace TooDoo.Service
             }
         }
 
+        /// <summary>
+        /// Sorts out todos that fully match the listname. Not case sensitive.
+        /// </summary>
+        /// <param name=""></param>
+        /// <param name="listName"></param>
+        private List<ToDo> GetExactMatchingTodos(List<ToDo> todoList, string listNameToMatchWith)
+        {
+            return todoList.Where(todo => NamesAreEqual(todo.Name, listNameToMatchWith)).ToList();
+        }
+
+        /// <summary>
+        /// Check if the todolistName is marked with important
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private bool NameIsImportant(string name)
+        {
+            return name[name.Length - 1] == '!';
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name1"></param>
+        /// <param name="name2"></param>
+        /// <returns></returns>
+        private bool NamesAreEqual(string name1, string name2)
+        {
+            return GetNameWithoutImportantMarker(name1.ToLower()) == GetNameWithoutImportantMarker(name2.ToLower());
+        }
+
+        /// <summary>
+        /// Returns a string without '!' in the end
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string GetNameWithoutImportantMarker(string name)
+        {
+            if (NameIsImportant(name))
+            {
+                name = name.Remove(name.Length - 1).Trim();
+            }
+            return name;
+        }
+
         #endregion
+
+
     }
 }

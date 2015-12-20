@@ -69,7 +69,7 @@ namespace TooDoo.Service
 	    [OperationContract]
 	    [WebInvoke( 
             Method = "PUT", 
-            UriTemplate = "todos/finished/{id}", 
+            UriTemplate = "todos/{id}/MarkAsFinished", 
             ResponseFormat = WebMessageFormat.Json, 
             RequestFormat = WebMessageFormat.Json, 
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
@@ -120,5 +120,7 @@ namespace TooDoo.Service
 	        ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json)]
 	    List<ToDo> GetCompleteListOfFinishedByListName(string listName);
+
+
 	}
 }
