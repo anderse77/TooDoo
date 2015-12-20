@@ -25,7 +25,7 @@ namespace ConsoleClient
                 service = channelFactory.CreateChannel();
 
                 Console.WindowWidth = 110;
-                Console.WindowHeight = 26;
+                Console.WindowHeight = 40;
 
                 do
                 {
@@ -56,6 +56,7 @@ namespace ConsoleClient
             Console.WriteLine("(8) Skapa flera att-göra tasks");
             Console.WriteLine("(9) Hämta viktiga punkter från en lista.");
             Console.WriteLine("(10) Hämta alla punkter i en att-göra lista sorterade utifrån deadline");
+            Console.WriteLine("(11) Editera en befintlig punkt");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -73,11 +74,50 @@ namespace ConsoleClient
                 case 8: AddMultipleToDoItems(); break;
                 case 9: GetImportantTodos(); break;
                 case 10: PrintToDoListByUserGivenNameOrderedByDeadLine(); break;
+                case 11: EditTodo(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+
+        /// <summary>
+        /// Ask user for input and then edit a todo.
+        /// </summary>
+        private static void EditTodo()
+        {
+            Console.WriteLine("Sriv IDt på den todo du vill editera: ");
+            int id = AskUserForNumericInput();
+            List<ToDo> allTodos = service.GetCompleteList();
+            ToDo todo;
+            try
+            {
+                todo = allTodos.Single(x => x.Id == id);
+            }
+            catch
+            {
+                Console.WriteLine("ToDo med det id finns ej!");
+                return;
+            }
+
+            Console.Write("Skriv in ny beskrivning: ");
+            string description = Console.ReadLine();
+            if (description != "")
+                todo.Description = description;
+
+            Console.Write("Skriv in ett nytt datum för deadline(åååå-mm-dd): ");
+            DateTime deadLine = AskUserForDateTime();
+            if(deadLine > DateTime.Now)
+                todo.DeadLine = deadLine;   
+
+            Console.Write("Skriv ned antalet minuter du tror det tar att göra klart punkten: ");
+            int estimationTime = AskUserForNumericInput();
+            if (estimationTime >= 0)
+                todo.EstimationTime = estimationTime;
+
+
+            service.EditToDo(id.ToString(), todo);
         }
         /// <summary>
         /// Gets all todos in a given list ordered by deadline and prints them to the screen.

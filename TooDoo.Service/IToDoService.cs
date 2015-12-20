@@ -115,7 +115,8 @@ namespace TooDoo.Service
             Method = "PUT", 
             UriTemplate = "todos/{id}",
             ResponseFormat = WebMessageFormat.Json,
-            RequestFormat = WebMessageFormat.Json)]
+            RequestFormat = WebMessageFormat.Json,
+            BodyStyle =WebMessageBodyStyle.Wrapped)]
         void EditToDo(string id, ToDo todo);
 
         /// <summary>
