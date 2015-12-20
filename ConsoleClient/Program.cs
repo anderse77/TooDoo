@@ -55,6 +55,7 @@ namespace ConsoleClient
             Console.WriteLine("(7) Hämta alla avklarade punkter i en given att-göra-lista");
             Console.WriteLine("(8) Skapa flera att-göra tasks");
             Console.WriteLine("(9) Hämta viktiga punkter från en lista.");
+            Console.WriteLine("(10) Hämta alla punkter i en att-göra lista sorterade utifrån deadline");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -71,11 +72,22 @@ namespace ConsoleClient
                 case 7: GetFinishedToDoByUserInput(); break;
                 case 8: AddMultipleToDoItems(); break;
                 case 9: GetImportantTodos(); break;
+                case 10: PrintToDoListByUserGivenNameOrderedByDeadLine(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
             }
+        }
+        /// <summary>
+        /// Gets all todos in a given list ordered by deadline and prints them to the screen.
+        /// </summary>
+        private static void PrintToDoListByUserGivenNameOrderedByDeadLine()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta sorterad utifrån deadline: ");
+            string input = Console.ReadLine();
+            List<ToDo> result = service.GetCompleteListOfToDosByListNameOrderedByDeadLine(input);
+            PrintToDoList(result);
         }
 
         /// <summary>
@@ -85,9 +97,9 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla viktiga punkter ifrån: ");
             string name = Console.ReadLine();
-            var viktigaTodos = service.GetImportantTodos(name);
+            var importantTodos = service.GetImportantTodos(name);
 
-            PrintToDoList(viktigaTodos);
+            PrintToDoList(importantTodos);
         }
 
         /// <summary>

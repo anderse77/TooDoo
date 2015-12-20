@@ -130,6 +130,11 @@ namespace TooDoo.Service
             RequestFormat = WebMessageFormat.Json)]
 	    List<ToDo> GetCompleteListOfFinishedByListName(string listName);
 
-
+	    [OperationContract]
+	    [WebGet(
+	        UriTemplate = "todos/{listName}/orderedbydeadline",
+	        ResponseFormat = WebMessageFormat.Json,
+	        RequestFormat = WebMessageFormat.Json)]
+	    List<ToDo> GetCompleteListOfToDosByListNameOrderedByDeadLine(string listName);
 	}
 }

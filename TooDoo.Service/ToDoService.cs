@@ -18,7 +18,7 @@ namespace TooDoo.Service
     {
         //ändra denna till er egen efter att i laddat ned från servern.
         //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
-        private string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
+        private string _connectionString = "Data Source=anders-bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
         #region WCF Service Methods
@@ -242,6 +242,18 @@ namespace TooDoo.Service
                 throw new WebFaultException(HttpStatusCode.NotFound);
 
             return todoListResult.Where(x => x.Finnished).ToList();
+        }
+        /// <summary>
+        /// Gets all todos in a given list ordered by deadline.
+        /// </summary>
+        /// <param name="listName">The name of the given list.</param>
+        /// <returns></returns>
+        public List<ToDo> GetCompleteListOfToDosByListNameOrderedByDeadLine(string listName)
+        {
+            List<ToDo> todoListResult = GetToDoListByName(listName);
+
+            return todoListResult.OrderByDescending(t => t.DeadLine).ToList();
+
         }
 
         #endregion
