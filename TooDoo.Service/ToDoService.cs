@@ -17,7 +17,8 @@ namespace TooDoo.Service
     public class ToDoService : IToDoService
     {
         //ändra denna till er egen efter att i laddat ned från servern.
-        private string _connectionString = "Data Source=anders-bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;";
+        //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
+        private string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
         #region WCF Service Methods
@@ -27,7 +28,7 @@ namespace TooDoo.Service
         /// </summary>
         /// <param name="listName">The name of the list to be returned from the database.</param>
         /// <returns></returns>
-        public List<ToDo> GetToDoListByName(string listName) //TODO: Anthon, name -> listName?
+        public List<ToDo> GetToDoListByName(string listName)
         {
             //Anthon: Denna check behövs inte för parametrar som bygger upp url typ "todos/{name}" Däremot kan om man skriver "todo?ListName={name}" bli null.
             //Parametrar som skickas utanför url med post eller put kan också bli null.
@@ -39,10 +40,24 @@ namespace TooDoo.Service
             context = new DAL(_connectionString);
 
             List<ToDo> todoListResult = context.GetToDoListByName(listName);
-
             CheckDALError();
 
-            return GetExactMatchingTodos(todoListResult, name); //DAL search listnames with wildcard
+            return GetExactMatchingTodos(todoListResult, listName); //DAL search listnames with wildcard this sorts out only exactly matching todos, and handle important marking.
+        }
+
+        /// <summary>
+        /// Get all important todos in todolist with name listName
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        public List<ToDo> GetImportantTodos(string listName)
+        {
+            context = new DAL(_connectionString);
+
+            List<ToDo> todoListResult = context.GetToDoListByName(listName);
+            CheckDALError();
+
+            return GetExactMatchingTodos(todoListResult, listName).Where(todo => NameIsImportant(todo.Name)).ToList();
         }
 
         /// <summary>
@@ -57,29 +72,32 @@ namespace TooDoo.Service
             context.AddToDo(todo);
 
             CheckDALError();
-            }
+        }
 
         /// <summary>
         /// Adds multiple todo items
         /// </summary>
         /// <param name="listName">The name of the todo-list to add multiple todo-items to.</param>
         /// <param name="todos">The todo-items to be added to the todo-list.</param>
-        public void AddMultipleTodoItems(string listName, List<ToDo> todos) //TODO: Anthon: variabelnamn bör visa på att det är en samling todos. todoList t.ex.
+        public void AddMultipleTodoItems(string listName, List<ToDo> todos)
         {
             CheckInput(todos);
             context = new DAL(_connectionString);
 
-            if (context.GetToDoListByName(listName).Count == 0) //TODO: Antho: null returneras bara om xception händer i DAL. För att kolla felaktigt listName kolla context.GetToDoListByName(listName).Count == 0.
+            List<ToDo> todoList = context.GetToDoListByName(listName);
+            todoList = GetExactMatchingTodos(todos, listName);
+
+            if (todoList.Count == 0)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
 
             foreach (var item in todos)
             {
-                    context.AddToDo(item);
+                context.AddToDo(item);
                 CheckDALError();
-                }
-                }
+            }
+        }
 
         /// <summary>
         /// Deletes a todo item
@@ -96,15 +114,12 @@ namespace TooDoo.Service
             //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             //}
 
-            //TODO: Anthon: Använd GetExactMatchingTodos(todoListResult, name); för att hantera viktiga punkter
-
-            //TODO: Anthon går inte att kolla null, DAL returnerar bara null då exception inträffar.
             //Kolla istället att listan inte är tom och att todo objektet som returneras har Id != 0.
             if (context.GetToDoListByName(listName).Count == 0) 
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
-                context.DeleteToDo(ParseInt(id)); //TODO: Anthon: Har gjort en metod ParseInt för detta med exception.
+            context.DeleteToDo(ParseInt(id)); //TODO: Anthon: Har gjort en metod ParseInt för detta med exception.
 
             CheckDALError();
         }
@@ -165,7 +180,7 @@ namespace TooDoo.Service
             if (todos.Count == 0)
                 throw new WebFaultException(HttpStatusCode.NotFound);            
 
-            return todos.Count(x => x.Finnished == false);
+            return todos.Count(x => !x.Finnished);
         }
 
         /// <summary>
@@ -294,7 +309,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         private bool NameIsImportant(string name)
         {
-            return name[name.Length - 1] == '!';
+            return name.Trim()[name.Length - 1] == '!';
         }
 
         /// <summary>
@@ -323,7 +338,5 @@ namespace TooDoo.Service
         }
 
         #endregion
-
-
     }
 }

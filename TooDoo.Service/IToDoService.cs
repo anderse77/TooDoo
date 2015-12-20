@@ -30,6 +30,15 @@ namespace TooDoo.Service
 		List<ToDo> GetToDoListByName(string listName);
 
         /// <summary>
+        /// Gets all important todos by listName
+        /// </summary>
+        /// <param name="listName">The name of the todo-list to be fetched.</param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(UriTemplate = "todos/{listName}/important", ResponseFormat = WebMessageFormat.Json, RequestFormat = WebMessageFormat.Json)]
+        List<ToDo> GetImportantTodos(string listName);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="todo"></param>

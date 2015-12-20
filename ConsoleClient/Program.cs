@@ -54,6 +54,7 @@ namespace ConsoleClient
             Console.WriteLine("(6) Ta bort en att-göra task");
             Console.WriteLine("(7) Hämta alla avklarade punkter i en given att-göra-lista");
             Console.WriteLine("(8) Skapa flera att-göra tasks");
+            Console.WriteLine("(9) Hämta viktiga punkter från en lista.");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -69,6 +70,7 @@ namespace ConsoleClient
                 case 6: DeleteTodoItem(); break;
                 case 7: GetFinishedToDoByUserInput(); break;
                 case 8: AddMultipleToDoItems(); break;
+                case 9: GetImportantTodos(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
@@ -76,6 +78,21 @@ namespace ConsoleClient
             }
         }
 
+        /// <summary>
+        /// Get all important todos in one list
+        /// </summary>
+        private static void GetImportantTodos()
+        {
+            Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla viktiga punkter ifrån: ");
+            string name = Console.ReadLine();
+            var viktigaTodos = service.GetImportantTodos(name);
+
+            PrintToDoList(viktigaTodos);
+        }
+
+        /// <summary>
+        /// Get number of finished and unfinished todos from one list
+        /// </summary>
         private static void GetNumberOfTodosfinished()
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet avklarade punkter i: ");
@@ -197,16 +214,8 @@ namespace ConsoleClient
             {
                 Console.WriteLine($"The todo-list with name {name} does not exist!");
             }
-            toDo.ForEach(s =>
-            {
-                string finished = s.Finnished ? "Finished" : "Not finished";
-                Console.WriteLine($"Id: {s.Id} " +
-                                  $"Description: {s.Description} " +
-                                  $"Estimation time: {s.EstimationTime} " +
-                                  $"Created: {s.CreatedDate} " +
-                                  $"Deadline: {s.DeadLine} " +
-                                  $"{finished}");
-            });
+
+            PrintToDoList(toDo);
         }
 
         /// <summary>
