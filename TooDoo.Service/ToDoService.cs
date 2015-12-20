@@ -18,7 +18,7 @@ namespace TooDoo.Service
     {
         //ändra denna till er egen efter att i laddat ned från servern.
         //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
-        private string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
+        private const string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
         #region WCF Service Methods
