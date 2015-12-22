@@ -25,7 +25,7 @@ namespace ConsoleClient
                 service = channelFactory.CreateChannel();
 
                 Console.WindowWidth = 110;
-                Console.WindowHeight = 40;
+                Console.WindowHeight = 26;
 
                 do
                 {
@@ -151,9 +151,16 @@ namespace ConsoleClient
         private static void PrintToDoListByUserGivenNameOrderedByDeadLine()
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta sorterad utifrån deadline: ");
-            string input = Console.ReadLine();
-            List<ToDo> result = service.GetCompleteListOfToDosByListNameOrderedByDeadLine(input);
-            PrintToDoList(result);
+            string name = Console.ReadLine();
+            if (!service.GetToDoListByName(name).Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
+            }
+            else
+            {
+                List<ToDo> result = service.GetCompleteListOfToDosByListNameOrderedByDeadLine(name);
+                PrintToDoList(result);
+            }
         }
 
         /// <summary>
@@ -163,9 +170,17 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla viktiga punkter ifrån: ");
             string name = Console.ReadLine();
-            var importantTodos = service.GetImportantTodos(name);
+            if (!service.GetToDoListByName(name).Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
+            }
+            else
+            {
+                var importantTodos = service.GetImportantTodos(name);
 
-            PrintToDoList(importantTodos);
+                PrintToDoList(importantTodos);
+            }
+
         }
 
         /// <summary>
@@ -175,8 +190,15 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet avklarade punkter i: ");
             string name = Console.ReadLine();
-            var nbrFinished = service.GetNumberTodosFinishedByListName(name);
-            Console.WriteLine($"Antal avklarade punkter: {nbrFinished}");
+            if (!service.GetToDoListByName(name).Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
+            }
+            else
+            {
+                var nbrFinished = service.GetNumberTodosFinishedByListName(name);
+                Console.WriteLine($"Antal avklarade punkter: {nbrFinished}");
+            }
         }
 
         /// <summary>
@@ -186,8 +208,15 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta alla avklarade punkter i: ");
             string name = Console.ReadLine();
-            List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByListName(name);
-            PrintToDoList(finishedToDos);
+            if (!service.GetToDoListByName(name).Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
+            }
+            else
+            {
+                List<ToDo> finishedToDos = service.GetCompleteListOfFinishedByListName(name);
+                PrintToDoList(finishedToDos);
+            }
         }
         /// <summary>
         /// Gets the number of todo-items left in a list with the user-supplied name and prints the number of todo-items not
@@ -197,8 +226,15 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta antalet punkter som är kvar i: ");
             string name = Console.ReadLine();
-            var nbrNotFinished = service.GetNumberTodosNotFinishedByListName(name);
-            Console.WriteLine($"Antal punkter kvar: {nbrNotFinished}");
+            if (!service.GetToDoListByName(name).Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
+            }
+            else
+            {
+                var nbrNotFinished = service.GetNumberTodosNotFinishedByListName(name);
+                Console.WriteLine($"Antal punkter kvar: {nbrNotFinished}");
+            }
         }
         /// <summary>
         /// fetches all todo-lists from the database and prints them to the screen.
@@ -287,13 +323,21 @@ namespace ConsoleClient
         {
             Console.Write("Skriv in det unika namnet på todo-listan du vill hämta: ");
             string name = Console.ReadLine();
-            List<ToDo> toDo = service.GetToDoListByName(name);
-            if (toDo.Count == 0)
+            if (!service.GetToDoListByName(name).Any())
             {
-                Console.WriteLine($"The todo-list with name {name} does not exist!");
+                Console.WriteLine("Listan med namnet {0} finns ej", name);
             }
+            else
+            {
+                List<ToDo> toDo = service.GetToDoListByName(name);
+                if (toDo.Count == 0)
+                {
+                    Console.WriteLine($"The todo-list with name {name} does not exist!");
+                }
 
-            PrintToDoList(toDo);
+                PrintToDoList(toDo);
+            }
+            
         }
 
         /// <summary>
