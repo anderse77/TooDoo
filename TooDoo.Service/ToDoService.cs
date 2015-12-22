@@ -46,6 +46,33 @@ namespace TooDoo.Service
         }
 
         /// <summary>
+        /// Returns a time object containing the total time it takes to complete 
+        /// all tasks in list and the time when the tasks will be finished
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        public Time GetTotalTimeAndTimeWhenFinished(string listName)
+        {
+            context = new DAL(_connectionString);
+
+            List<ToDo> todos = context.GetToDoListByName(listName);
+            CheckDALError();
+
+            todos = GetExactMatchingTodos(todos, listName);
+
+            if (todos.Count == 0)
+                throw new WebFaultException(HttpStatusCode.NotFound);
+
+            var totalTime = todos.Select(x => x.EstimationTime).Sum();
+
+            return new Time
+            {
+                TotalTime = Time.GetTotalTime(totalTime),
+                TimeWhenFinished = Time.GetTimeWhenFinished(totalTime)
+            };
+        }
+
+        /// <summary>
         /// Get all important todos in todolist with name listName
         /// </summary>
         /// <param name="listName"></param>

@@ -39,6 +39,16 @@ namespace TooDoo.Service
         List<ToDo> GetImportantTodos(string listName);
 
         /// <summary>
+        /// Returns a time object containing the total time it takes to complete 
+        /// all tasks in list and the time when the tasks will be finished
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(UriTemplate = "todos/{listName}/time)", ResponseFormat = WebMessageFormat.Json)]
+        Time GetTotalTimeAndTimeWhenFinished(string listName);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="todo"></param>

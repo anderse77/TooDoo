@@ -57,6 +57,7 @@ namespace ConsoleClient
             Console.WriteLine("(9) Hämta viktiga punkter från en lista.");
             Console.WriteLine("(10) Hämta alla punkter i en att-göra lista sorterade utifrån deadline");
             Console.WriteLine("(11) Editera en befintlig punkt");
+            Console.WriteLine("(12) Se hur lång tid det tar att göra alla punker i en lista");
             Console.Write("Mata in en siffra beroende på vad du vill göra: ");
         }
 
@@ -75,10 +76,35 @@ namespace ConsoleClient
                 case 9: GetImportantTodos(); break;
                 case 10: PrintToDoListByUserGivenNameOrderedByDeadLine(); break;
                 case 11: EditTodo(); break;
+                case 12: GetTotalTimeAndTimeWhenFinished(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Get the the total time for all tasks in list and
+        /// the time when all tasks will be finished
+        /// </summary>
+        private static void GetTotalTimeAndTimeWhenFinished()
+        {
+            Console.WriteLine("Ange listans namn: ");
+            string listName = Console.ReadLine();
+
+            if (!service.GetToDoListByName(listName)
+                .Any())
+            {
+                Console.WriteLine("Listan med namnet {0} finns ej", listName);
+            }
+            else
+            {
+                var time = service.GetTotalTimeAndTimeWhenFinished(listName);
+                Console.WriteLine("Listan '{0}' kommer att ta {1} att färdigställa och kommer att vara färdig {2}",
+                    listName,
+                    time.TotalTime,
+                    time.TimeWhenFinished);
             }
         }
 
@@ -108,8 +134,8 @@ namespace ConsoleClient
 
             Console.Write("Skriv in ett nytt datum för deadline(åååå-mm-dd): ");
             DateTime deadLine = AskUserForDateTime();
-            if(deadLine > DateTime.Now)
-                todo.DeadLine = deadLine;   
+            if (deadLine > DateTime.Now)
+                todo.DeadLine = deadLine;
 
             Console.Write("Skriv ned antalet minuter du tror det tar att göra klart punkten: ");
             int estimationTime = AskUserForNumericInput();
@@ -252,7 +278,7 @@ namespace ConsoleClient
                 }
 
                 service.AddMultipleTodoItems(listName, todoList);
-            }    
+            }
         }
         /// <summary>
         /// Prints the todo-list with the user-supplied name to the screen.
