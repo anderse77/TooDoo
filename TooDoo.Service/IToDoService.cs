@@ -70,18 +70,18 @@ namespace TooDoo.Service
         void AddTodoItem(ToDo todo);
 
         /// <summary>
-        /// 
+        /// Adds multiple items to todo list
         /// </summary>
         /// <param name="listName"></param>
-        /// <param name="todo"></param>
+        /// <param name="items"></param>
         [OperationContract]
         [WebInvoke(
             Method = "POST",
-            UriTemplate = "todos/{listName}",
+            UriTemplate = "todos/{listName}/{items}",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
-        void AddMultipleTodoItems(string listName, List<ToDo> todo);
+        void AddMultipleTodoItems(string listName, string items);
 
 
         [OperationContract]

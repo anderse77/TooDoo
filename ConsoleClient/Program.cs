@@ -300,22 +300,7 @@ namespace ConsoleClient
                 Console.WriteLine("Ange beskrivning på de punkter du önskar addera till listan, separera dem med komma (,): ");
                 string items = Console.ReadLine();
 
-                List<ToDo> todoList = new List<ToDo>();
-
-                foreach (var item in items.Split(','))
-                {
-                    ToDo todo = new ToDo()
-                    {
-                        CreatedDate = DateTime.Now,
-                        Name = listName,
-                        Description = item.Trim(),
-                        DeadLine = DateTime.Now.AddDays(1)
-                    };
-
-                    todoList.Add(todo);
-                }
-
-                service.AddMultipleTodoItems(listName, todoList);
+                service.AddMultipleTodoItems(listName, items);
             }
         }
         /// <summary>

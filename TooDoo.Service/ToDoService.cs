@@ -150,11 +150,24 @@ namespace TooDoo.Service
         /// Adds multiple todo items
         /// </summary>
         /// <param name="listName">The name of the todo-list to add multiple todo-items to.</param>
-        /// <param name="todos">The todo-items to be added to the todo-list.</param>
-        public void AddMultipleTodoItems(string listName, List<ToDo> todos)
+        /// <param name="items">The items to be added to the todo-list</param>
+        public void AddMultipleTodoItems(string listName, string items)
         {
-            CheckInput(todos);
             context = new DAL(_connectionString);
+
+            var todos = new List<ToDo>();
+
+            foreach (var item in items.Split(','))
+            {
+                todos.Add(
+                    new ToDo
+                    {
+                        CreatedDate = DateTime.Now,
+                        Name = listName,
+                        Description = item.Trim(),
+                        DeadLine = DateTime.Now.AddDays(1)
+                    });
+            }
 
             List<ToDo> todoList = context.GetToDoListByName(listName);
             todoList = GetExactMatchingTodos(todos, listName);
@@ -186,7 +199,7 @@ namespace TooDoo.Service
             //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             //}
 
-            if (context.GetToDoListByName(listName).Count == 0) 
+            if (context.GetToDoListByName(listName).Count == 0)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
@@ -200,7 +213,7 @@ namespace TooDoo.Service
         /// </summary>
         /// <param name="id">The id of the todo-item to be set as finished.</param>
         public void MarkToDoItemAsFinished(string id)
-        { 
+        {
             context = new DAL(_connectionString);
 
             //Get and cotrol that todo with id exists
@@ -249,7 +262,7 @@ namespace TooDoo.Service
             todos = GetExactMatchingTodos(todos, listName);
 
             if (todos.Count == 0)
-                throw new WebFaultException(HttpStatusCode.NotFound);            
+                throw new WebFaultException(HttpStatusCode.NotFound);
 
             return todos.Count(x => !x.Finnished);
         }
@@ -338,7 +351,7 @@ namespace TooDoo.Service
         /// <param name="obj"></param>
         private void CheckInput(object obj)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
@@ -356,7 +369,7 @@ namespace TooDoo.Service
             {
                 result = Int32.Parse(value);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new WebFaultException<string>(ex.Message, HttpStatusCode.BadRequest);
             }
@@ -370,7 +383,7 @@ namespace TooDoo.Service
         /// <exception cref="WebFaultException{string}"></exception>
         private void CheckDALError()
         {
-            if(context.GetErrorMessage() != null)
+            if (context.GetErrorMessage() != null)
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.InternalServerError);
             }
