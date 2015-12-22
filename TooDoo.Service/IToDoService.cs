@@ -39,14 +39,22 @@ namespace TooDoo.Service
         List<ToDo> GetImportantTodos(string listName);
 
         /// <summary>
-        /// Returns a time object containing the total time it takes to complete 
-        /// all tasks in list and the time when the tasks will be finished
+        /// Returns how long it will take to complete all tasks in list
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
         [OperationContract]
-        [WebGet(UriTemplate = "todos/{listName}/time", ResponseFormat = WebMessageFormat.Json)]
-        Time GetTotalTimeAndTimeWhenFinished(string listName);
+        [WebGet(UriTemplate = "todos/{listName}/estimate", ResponseFormat = WebMessageFormat.Json)]
+        string GetEstimate(string listName);
+
+        /// <summary>
+        /// Returns the time when all tasks in list will be done
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebGet(UriTemplate = "todos/{listName}/timewhendone", ResponseFormat = WebMessageFormat.Json)]
+        string GetTimeWhenDone(string listName);
 
         /// <summary>
         /// 
@@ -62,18 +70,18 @@ namespace TooDoo.Service
         void AddTodoItem(ToDo todo);
 
         /// <summary>
-        /// 
+        /// Adds multiple items to todo list
         /// </summary>
         /// <param name="listName"></param>
-        /// <param name="todo"></param>
+        /// <param name="items"></param>
         [OperationContract]
         [WebInvoke(
             Method = "POST",
-            UriTemplate = "todos/{listName}",
+            UriTemplate = "todos/{listName}/{items}",
             ResponseFormat = WebMessageFormat.Json,
             RequestFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
-        void AddMultipleTodoItems(string listName, List<ToDo> todo);
+        void AddMultipleTodoItems(string listName, string items);
 
 
         [OperationContract]

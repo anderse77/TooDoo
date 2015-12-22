@@ -18,7 +18,7 @@ namespace TooDoo.Service
     {
         //ändra denna till er egen efter att i laddat ned från servern.
         //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
-        private const string _connectionString = "Data Source=anders-bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;";
+        private const string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
         #region WCF Service Methods
@@ -42,16 +42,16 @@ namespace TooDoo.Service
             List<ToDo> todoListResult = context.GetToDoListByName(listName);
             CheckDALError();
 
-            return GetExactMatchingTodos(todoListResult, listName); //DAL search listnames with wildcard this sorts out only exactly matching todos, and handle important marking.
+            //DAL search listnames with wildcard this sorts out only exactly matching todos, and handle important marking.
+            return GetExactMatchingTodos(todoListResult, listName);
         }
 
         /// <summary>
-        /// Returns a time object containing the total time it takes to complete 
-        /// all tasks in list and the time when the tasks will be finished
+        /// Returns how long it will take to complete all tasks in list
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
-        public Time GetTotalTimeAndTimeWhenFinished(string listName)
+        public string GetEstimate(string listName)
         {
             context = new DAL(_connectionString);
 
@@ -67,11 +67,54 @@ namespace TooDoo.Service
                 .Where(x => !x.Finnished)
                 .Select(x => x.EstimationTime).Sum();
 
-            return new Time
+            var timeSpan = TimeSpan.FromMinutes(totalTime);
+
+            return string.Format("{0} dagar, {1} timmar, {2} minuter",
+                timeSpan.Days,
+                timeSpan.Hours,
+                timeSpan.Minutes);
+        }
+
+        /// <summary>
+        /// Returns the time when all tasks in list will be done
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        public string GetTimeWhenDone(string listName)
+        {
+            context = new DAL(_connectionString);
+
+            List<ToDo> todos = context.GetToDoListByName(listName);
+            CheckDALError();
+
+            todos = GetExactMatchingTodos(todos, listName);
+
+            if (todos.Count == 0)
+                throw new WebFaultException(HttpStatusCode.NotFound);
+
+            var totalTime = todos
+                .Where(x => !x.Finnished)
+                .Select(x => x.EstimationTime).Sum();
+
+            var timeSpan = TimeSpan.FromMinutes(totalTime);
+
+            // If tasks take more than a day show date and time
+            if (timeSpan.Days > 0)
             {
-                TotalTime = Time.GetTotalTime(totalTime),
-                TimeWhenFinished = Time.GetTimeWhenFinished(totalTime)
-            };
+                return string.Format(
+                    DateTime.Now
+                    .AddDays(timeSpan.Days)
+                    .AddHours(timeSpan.Hours)
+                    .AddMinutes(timeSpan.Minutes).ToString("yyyy-MM-dd HH:mm"));
+            }
+            //...otherwise only show the time
+            else
+            {
+                return string.Format(
+                    DateTime.Now
+                    .AddHours(timeSpan.Hours)
+                    .AddMinutes(timeSpan.Minutes).ToString("HH:mm"));
+            }
         }
 
         /// <summary>
@@ -107,11 +150,24 @@ namespace TooDoo.Service
         /// Adds multiple todo items
         /// </summary>
         /// <param name="listName">The name of the todo-list to add multiple todo-items to.</param>
-        /// <param name="todos">The todo-items to be added to the todo-list.</param>
-        public void AddMultipleTodoItems(string listName, List<ToDo> todos)
+        /// <param name="items">The items to be added to the todo-list</param>
+        public void AddMultipleTodoItems(string listName, string items)
         {
-            CheckInput(todos);
             context = new DAL(_connectionString);
+
+            var todos = new List<ToDo>();
+
+            foreach (var item in items.Split(','))
+            {
+                todos.Add(
+                    new ToDo
+                    {
+                        CreatedDate = DateTime.Now,
+                        Name = listName,
+                        Description = item.Trim(),
+                        DeadLine = DateTime.Now.AddDays(1)
+                    });
+            }
 
             List<ToDo> todoList = context.GetToDoListByName(listName);
             todoList = GetExactMatchingTodos(todos, listName);
@@ -143,12 +199,11 @@ namespace TooDoo.Service
             //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             //}
 
-            //Kolla istället att listan inte är tom och att todo objektet som returneras har Id != 0.
-            if (context.GetToDoListByName(listName).Count == 0) 
+            if (context.GetToDoListByName(listName).Count == 0)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
-            context.DeleteToDo(ParseInt(id)); //TODO: Anthon: Har gjort en metod ParseInt för detta med exception.
+            context.DeleteToDo(ParseInt(id));
 
             CheckDALError();
         }
@@ -158,7 +213,7 @@ namespace TooDoo.Service
         /// </summary>
         /// <param name="id">The id of the todo-item to be set as finished.</param>
         public void MarkToDoItemAsFinished(string id)
-        { 
+        {
             context = new DAL(_connectionString);
 
             //Get and cotrol that todo with id exists
@@ -207,7 +262,7 @@ namespace TooDoo.Service
             todos = GetExactMatchingTodos(todos, listName);
 
             if (todos.Count == 0)
-                throw new WebFaultException(HttpStatusCode.NotFound);            
+                throw new WebFaultException(HttpStatusCode.NotFound);
 
             return todos.Count(x => !x.Finnished);
         }
@@ -272,6 +327,7 @@ namespace TooDoo.Service
 
             return todoListResult.Where(x => x.Finnished).ToList();
         }
+
         /// <summary>
         /// Gets all todos in a given list ordered by deadline.
         /// </summary>
@@ -279,7 +335,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         public List<ToDo> GetCompleteListOfToDosByListNameOrderedByDeadLine(string listName)
         {
-            List<ToDo> todoListResult = GetToDoListByName(listName);
+            List<ToDo> todoListResult = GetToDoListByName(listName);  //TODO: Anthon: använd GetExactMatchingTodos annars kan man få flera listor på en sökning. "Hamid" och "Ham" ger båda listorna "Hamid" och "Hamid2" om de nu finns i DB
 
             return todoListResult.OrderByDescending(t => t.DeadLine).ToList();
 
@@ -295,7 +351,7 @@ namespace TooDoo.Service
         /// <param name="obj"></param>
         private void CheckInput(object obj)
         {
-            if(obj == null)
+            if (obj == null)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
@@ -313,7 +369,7 @@ namespace TooDoo.Service
             {
                 result = Int32.Parse(value);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new WebFaultException<string>(ex.Message, HttpStatusCode.BadRequest);
             }
@@ -327,14 +383,14 @@ namespace TooDoo.Service
         /// <exception cref="WebFaultException{string}"></exception>
         private void CheckDALError()
         {
-            if(context.GetErrorMessage() != null)
+            if (context.GetErrorMessage() != null)
             {
                 throw new WebFaultException<string>(context.GetErrorMessage(), HttpStatusCode.InternalServerError);
             }
         }
 
         /// <summary>
-        /// Sorts out todos that fully match the listname. Not case sensitive.
+        /// Sorts out todos that fully match the listname. Not case sensitive. "ListName" and "ListName!" will be considered equal.
         /// </summary>
         /// <param name=""></param>
         /// <param name="listName"></param>

@@ -76,7 +76,7 @@ namespace ConsoleClient
                 case 9: GetImportantTodos(); break;
                 case 10: PrintToDoListByUserGivenNameOrderedByDeadLine(); break;
                 case 11: EditTodo(); break;
-                case 12: GetTotalTimeAndTimeWhenFinished(); break;
+                case 12: GetEstimateAndTimeWhenDone(); break;
                 default:
                     Console.WriteLine();
                     Console.Write("Du måste mata in en siffra som svarar mot ett alternativ på menyn!");
@@ -88,7 +88,7 @@ namespace ConsoleClient
         /// Get the the total time for all tasks in list and
         /// the time when all tasks will be finished
         /// </summary>
-        private static void GetTotalTimeAndTimeWhenFinished()
+        private static void GetEstimateAndTimeWhenDone()
         {
             Console.WriteLine("Ange listans namn: ");
             string listName = Console.ReadLine();
@@ -100,11 +100,13 @@ namespace ConsoleClient
             }
             else
             {
-                var time = service.GetTotalTimeAndTimeWhenFinished(listName);
-                Console.WriteLine("Listan '{0}' kommer att ta {1} att färdigställa och kommer att vara färdig {2}",
+                var estimate = service.GetEstimate(listName);
+                var timeWhenDone = service.GetTimeWhenDone(listName);
+
+                Console.WriteLine("Listan '{0}' tar {1} att bli färdig och kommer att bli färdig {2}",
                     listName,
-                    time.TotalTime,
-                    time.TimeWhenFinished);
+                    estimate,
+                    timeWhenDone);
             }
         }
 
@@ -297,22 +299,7 @@ namespace ConsoleClient
                 Console.WriteLine("Ange beskrivning på de punkter du önskar addera till listan, separera dem med komma (,): ");
                 string items = Console.ReadLine();
 
-                List<ToDo> todoList = new List<ToDo>();
-
-                foreach (var item in items.Split(','))
-                {
-                    ToDo todo = new ToDo()
-                    {
-                        CreatedDate = DateTime.Now,
-                        Name = listName,
-                        Description = item.Trim(),
-                        DeadLine = DateTime.Now.AddDays(1)
-                    };
-
-                    todoList.Add(todo);
-                }
-
-                service.AddMultipleTodoItems(listName, todoList);
+                service.AddMultipleTodoItems(listName, items);
             }
         }
         /// <summary>
