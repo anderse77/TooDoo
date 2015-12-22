@@ -251,7 +251,6 @@ namespace ConsoleClient
         {
             Console.Write("Ange det todo id du vill markera som klar: ");
             int todoIdToSetAsFinished = AskUserForNumericInput();
-
             service.MarkToDoItemAsFinished(todoIdToSetAsFinished.ToString());
         }
         /// <summary>
