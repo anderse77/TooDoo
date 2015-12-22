@@ -63,7 +63,9 @@ namespace TooDoo.Service
             if (todos.Count == 0)
                 throw new WebFaultException(HttpStatusCode.NotFound);
 
-            var totalTime = todos.Select(x => x.EstimationTime).Sum();
+            var totalTime = todos
+                .Where(x => !x.Finnished)
+                .Select(x => x.EstimationTime).Sum();
 
             return new Time
             {
