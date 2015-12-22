@@ -47,12 +47,11 @@ namespace TooDoo.Service
         }
 
         /// <summary>
-        /// Returns a time object containing the total time it takes to complete 
-        /// all tasks in list and the time when the tasks will be finished
+        /// Returns how long it will take to complete all tasks in list
         /// </summary>
         /// <param name="listName"></param>
         /// <returns></returns>
-        public Time GetTotalTimeAndTimeWhenFinished(string listName)
+        public string GetEstimate(string listName)
         {
             context = new DAL(_connectionString);
 
@@ -68,11 +67,54 @@ namespace TooDoo.Service
                 .Where(x => !x.Finnished)
                 .Select(x => x.EstimationTime).Sum();
 
-            return new Time
+            var timeSpan = TimeSpan.FromMinutes(totalTime);
+
+            return string.Format("{0} dagar, {1} timmar, {2} minuter",
+                timeSpan.Days,
+                timeSpan.Hours,
+                timeSpan.Minutes);
+        }
+
+        /// <summary>
+        /// Returns the time when all tasks in list will be done
+        /// </summary>
+        /// <param name="listName"></param>
+        /// <returns></returns>
+        public string GetTimeWhenDone(string listName)
+        {
+            context = new DAL(_connectionString);
+
+            List<ToDo> todos = context.GetToDoListByName(listName);
+            CheckDALError();
+
+            todos = GetExactMatchingTodos(todos, listName);
+
+            if (todos.Count == 0)
+                throw new WebFaultException(HttpStatusCode.NotFound);
+
+            var totalTime = todos
+                .Where(x => !x.Finnished)
+                .Select(x => x.EstimationTime).Sum();
+
+            var timeSpan = TimeSpan.FromMinutes(totalTime);
+
+            // If tasks take more than a day show date and time
+            if (timeSpan.Days > 0)
             {
-                TotalTime = Time.GetTotalTime(totalTime),
-                TimeWhenFinished = Time.GetTimeWhenFinished(totalTime)
-            };
+                return string.Format(
+                    DateTime.Now
+                    .AddDays(timeSpan.Days)
+                    .AddHours(timeSpan.Hours)
+                    .AddMinutes(timeSpan.Minutes).ToString("yyyy-MM-dd HH:mm"));
+            }
+            //...otherwise only show the time
+            else
+            {
+                return string.Format(
+                    DateTime.Now
+                    .AddHours(timeSpan.Hours)
+                    .AddMinutes(timeSpan.Minutes).ToString("HH:mm"));
+            }
         }
 
         /// <summary>
