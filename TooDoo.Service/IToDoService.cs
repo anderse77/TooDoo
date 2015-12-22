@@ -45,7 +45,7 @@ namespace TooDoo.Service
         /// <param name="listName"></param>
         /// <returns></returns>
         [OperationContract]
-        [WebGet(UriTemplate = "todos/{listName}/time", ResponseFormat = WebMessageFormat.Json)]
+        [WebGet(UriTemplate = "todos/{listName}/estimate", ResponseFormat = WebMessageFormat.Json)]
         Time GetTotalTimeAndTimeWhenFinished(string listName);
 
         /// <summary>

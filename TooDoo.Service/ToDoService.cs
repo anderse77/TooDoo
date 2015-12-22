@@ -18,7 +18,7 @@ namespace TooDoo.Service
     {
         //ändra denna till er egen efter att i laddat ned från servern.
         //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
-        private const string _connectionString = "Data Source=anders-bärbar;Initial Catalog=DB_ToDoList;Integrated Security=True;";
+        private const string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
         #region WCF Service Methods
@@ -42,7 +42,8 @@ namespace TooDoo.Service
             List<ToDo> todoListResult = context.GetToDoListByName(listName);
             CheckDALError();
 
-            return GetExactMatchingTodos(todoListResult, listName); //DAL search listnames with wildcard this sorts out only exactly matching todos, and handle important marking.
+            //DAL search listnames with wildcard this sorts out only exactly matching todos, and handle important marking.
+            return GetExactMatchingTodos(todoListResult, listName);
         }
 
         /// <summary>
@@ -143,12 +144,11 @@ namespace TooDoo.Service
             //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             //}
 
-            //Kolla istället att listan inte är tom och att todo objektet som returneras har Id != 0.
             if (context.GetToDoListByName(listName).Count == 0) 
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
             }
-            context.DeleteToDo(ParseInt(id)); //TODO: Anthon: Har gjort en metod ParseInt för detta med exception.
+            context.DeleteToDo(ParseInt(id));
 
             CheckDALError();
         }
@@ -272,6 +272,7 @@ namespace TooDoo.Service
 
             return todoListResult.Where(x => x.Finnished).ToList();
         }
+
         /// <summary>
         /// Gets all todos in a given list ordered by deadline.
         /// </summary>
@@ -279,7 +280,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         public List<ToDo> GetCompleteListOfToDosByListNameOrderedByDeadLine(string listName)
         {
-            List<ToDo> todoListResult = GetToDoListByName(listName);
+            List<ToDo> todoListResult = GetToDoListByName(listName);  //TODO: Anthon: använd GetExactMatchingTodos annars kan man få flera listor på en sökning. "Hamid" och "Ham" ger båda listorna "Hamid" och "Hamid2" om de nu finns i DB
 
             return todoListResult.OrderByDescending(t => t.DeadLine).ToList();
 
@@ -334,7 +335,7 @@ namespace TooDoo.Service
         }
 
         /// <summary>
-        /// Sorts out todos that fully match the listname. Not case sensitive.
+        /// Sorts out todos that fully match the listname. Not case sensitive. "ListName" and "ListName!" will be considered equal.
         /// </summary>
         /// <param name=""></param>
         /// <param name="listName"></param>
