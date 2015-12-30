@@ -337,7 +337,7 @@ namespace TooDoo.Service
         {
             List<ToDo> todoListResult = GetToDoListByName(listName);  //TODO: Anthon: använd GetExactMatchingTodos annars kan man få flera listor på en sökning. "Hamid" och "Ham" ger båda listorna "Hamid" och "Hamid2" om de nu finns i DB
 
-            return todoListResult.OrderByDescending(t => t.DeadLine).ToList();
+            return todoListResult.OrderBy(t => t.DeadLine).ToList();
 
         }
 
