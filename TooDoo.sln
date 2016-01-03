@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TooDoo.Data", "TooDoo.Data\TooDoo.Data.csproj", "{66B66183-BE89-4E1D-9DB8-E18440ED0AE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TooDoo.Entities", "TooDoo.Entities\TooDoo.Entities.csproj", "{B060F666-DE8C-4971-A411-C0D478954DF8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TooDoo.SelfTest", "TooDoo.SelfTest\TooDoo.SelfTest.csproj", "{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}"
 EndProject
@@ -37,14 +35,6 @@ Global
 		{B060F666-DE8C-4971-A411-C0D478954DF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B060F666-DE8C-4971-A411-C0D478954DF8}.Release|x86.ActiveCfg = Release|Any CPU
 		{B060F666-DE8C-4971-A411-C0D478954DF8}.Release|x86.Build.0 = Release|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Debug|x86.Build.0 = Debug|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|x86.ActiveCfg = Release|Any CPU
-		{6F9FC4DE-19BF-4791-8164-F4F6C8C9C286}.Release|x86.Build.0 = Release|Any CPU
 		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A03F453-CA4E-4C27-9F1E-2B34B4CA13FA}.Debug|x86.ActiveCfg = Debug|Any CPU
