@@ -16,8 +16,6 @@ namespace TooDoo.Service
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
     public class ToDoService : IToDoService
     {
-        //ändra denna till er egen efter att i laddat ned från servern.
-        //(local) borde fungerar för alla om ni kör med SQL på samma dator. Så ändra inte om ni inte måste.
         private const string _connectionString = "Data Source=(local);Initial Catalog=DB_ToDoList;Integrated Security=True;";
         private DAL context;
 
@@ -30,13 +28,6 @@ namespace TooDoo.Service
         /// <returns></returns>
         public List<ToDo> GetToDoListByName(string listName)
         {
-            //Anthon: Denna check behövs inte för parametrar som bygger upp url typ "todos/{name}" Däremot kan om man skriver "todo?ListName={name}" bli null.
-            //Parametrar som skickas utanför url med post eller put kan också bli null.
-            //if(name == null)
-            //{
-            //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
-            //}
-
             context = new DAL(_connectionString);
 
             List<ToDo> todoListResult = context.GetToDoListByName(listName);
@@ -193,12 +184,6 @@ namespace TooDoo.Service
         {
             context = new DAL(_connectionString);
 
-            //if (String.IsNullOrEmpty(listName)
-            //    || String.IsNullOrEmpty(id))
-            //{
-            //    throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
-            //}
-
             if (context.GetToDoListByName(listName).Count == 0)
             {
                 throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
@@ -335,7 +320,7 @@ namespace TooDoo.Service
         /// <returns></returns>
         public List<ToDo> GetCompleteListOfToDosByListNameOrderedByDeadLine(string listName)
         {
-            List<ToDo> todoListResult = GetToDoListByName(listName);  //TODO: Anthon: använd GetExactMatchingTodos annars kan man få flera listor på en sökning. "Hamid" och "Ham" ger båda listorna "Hamid" och "Hamid2" om de nu finns i DB
+            List<ToDo> todoListResult = GetToDoListByName(listName);
 
             return todoListResult.Where(t => !t.Finnished).OrderBy(t => t.DeadLine).ToList();
 
