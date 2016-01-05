@@ -96,7 +96,7 @@ namespace TooDoo.Service
 	    [OperationContract]
 	    [WebInvoke( 
             Method = "PUT", 
-            UriTemplate = "todos/{id}/MarkAsFinished", 
+            UriTemplate = "todos/{id}/markasfinished", 
             ResponseFormat = WebMessageFormat.Json, 
             RequestFormat = WebMessageFormat.Json, 
             BodyStyle = WebMessageBodyStyle.WrappedResponse)]
