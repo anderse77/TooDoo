@@ -86,8 +86,8 @@ namespace TooDoo.Service
 
         [OperationContract]
         [WebInvoke(Method = "DELETE", 
-            UriTemplate = "todos/{listName}/{id}")] //TODO: Anthon: borde ha URI todos/{Id}
-        void DeleteToDoItem(string listName, string id);
+            UriTemplate = "todos/{id}")]
+        void DeleteToDoItem(string id);
 
         /// <summary>
         /// Sets a todo as finished
