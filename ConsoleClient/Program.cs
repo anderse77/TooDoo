@@ -344,7 +344,7 @@ namespace ConsoleClient
                 Console.WriteLine("Ange det todo id du vill ta bort: ");
                 int id = AskUserForNumericInput();
 
-                service.DeleteToDoItem(listName, id.ToString());
+                service.DeleteToDoItem(id.ToString());
             }
         }
         /// <summary>

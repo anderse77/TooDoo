@@ -180,14 +180,10 @@ namespace TooDoo.Service
         /// </summary>
         /// <param name="listName">The name of the list from which to delete an item.</param>
         /// <param name="id">The id of the item to be deleted.</param>
-        public void DeleteToDoItem(string listName, string id)
+        public void DeleteToDoItem(string id)
         {
             context = new DAL(_connectionString);
 
-            if (context.GetToDoListByName(listName).Count == 0)
-            {
-                throw new WebFaultException<string>("Wrong method syntax", HttpStatusCode.NotFound);
-            }
             context.DeleteToDo(ParseInt(id));
 
             CheckDALError();
